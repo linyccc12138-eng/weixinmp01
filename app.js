@@ -11,6 +11,7 @@ App({
     this.getSystemInfo()
     this.checkUpdate()
     this.trySilentLogin()
+    auth.fetchCsrfToken()
   },
 
   getSystemInfo() {
