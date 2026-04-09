@@ -124,13 +124,11 @@ Page({
       if (chapter.file_id) {
         try {
           const psignRes = await auth.courseRequest({
-            url: `/play/${chapterId}/psign`,
-            method: 'GET',
-            header: { 'X-Device-Id': 'miniprogram' }
+            url: `/play/api/${chapterId}/psign`,
+            method: 'GET'
           })
-          if (psignRes && psignRes.success && psignRes.file_id) {
-            const appId = '1300598172'
-            videoSrc = `https://playvideo.qcloud.com/getplayinfo/v2/${appId}/${psignRes.file_id}?psign=${psignRes.psign}`
+          if (psignRes && psignRes.success && psignRes.play_url) {
+            videoSrc = psignRes.play_url
           }
         } catch (e) {}
       }
