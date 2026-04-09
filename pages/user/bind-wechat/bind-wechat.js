@@ -21,7 +21,7 @@ Page({
       const loginRes = await wx.login()
       if (!loginRes.code) throw new Error('微信登录失败')
       const res = await auth.request({
-        url: '/mall/api/auth/bind-wechat',
+        url: '/mall/api/wechat/bind',
         method: 'POST',
         data: { code: loginRes.code }
       })
@@ -46,7 +46,7 @@ Page({
         if (res.confirm) {
           this.setData({ submitting: true })
           try {
-            const res = await auth.request({ url: '/mall/api/auth/unbind-wechat', method: 'POST' })
+            const res = await auth.request({ url: '/mall/api/wechat/unbind', method: 'POST' })
             if (res.success) {
               wx.showToast({ title: '已解绑', icon: 'success' })
               this.setData({ isBound: false })

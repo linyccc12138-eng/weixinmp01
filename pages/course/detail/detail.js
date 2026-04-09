@@ -23,12 +23,13 @@ Page({
   async loadCourseDetail(id) {
     this.setData({ loading: true })
     try {
-      const res = await auth.courseRequest({
-        url: `/course/api/courses/${id}`,
-        method: 'GET'
-      })
-      const course = res.data || res
-      const chapters = (course.chapters || []).map((ch, idx) => ({
+      const [courseRes, chaptersRes] = await Promise.all([
+        auth.courseRequest({ url: `/course/${id}`, method: 'GET' }).catch(() => null),
+        auth.courseRequest({ url: `/course/${id}/api/chapters`, method: 'GET' }).catch(() => null)
+      ])
+      const course = (courseRes && (courseRes.data || courseRes)) || {}
+      const chaptersData = (chaptersRes && (chaptersRes.data || chaptersRes)) || []
+      const chapters = (course.chapters || chaptersData.chapters || chaptersData || []).map((ch, idx) => ({
         ...ch,
         is_locked: !course.has_permission,
         is_completed: course.progress && course.progress.completed_chapter_ids

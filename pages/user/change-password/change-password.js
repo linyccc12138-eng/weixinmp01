@@ -17,8 +17,8 @@ Page({
     this.setData({ submitting: true, errorMsg: '' })
     try {
       const res = await auth.request({
-        url: '/mall/api/auth/change-password',
-        method: 'POST',
+        url: '/mall/api/profile/password',
+        method: 'PUT',
         data: { current_password: currentPassword, new_password: newPassword }
       })
       if (res.success) {

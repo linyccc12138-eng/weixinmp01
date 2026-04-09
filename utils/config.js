@@ -19,4 +19,4 @@ const CONFIG = {
 
 const config = CONFIG[ENV] || CONFIG.production
 
-export default config
+module.exports = config

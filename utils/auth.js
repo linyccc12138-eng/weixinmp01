@@ -1,6 +1,7 @@
 const config = require('./config')
 
 const TOKEN_KEY = config.tokenKey
+const COURSE_SESSION_KEY = 'course_session'
 let isRedirecting401 = false
 
 function getToken() {
@@ -13,6 +14,18 @@ function setToken(token) {
 
 function removeToken() {
   wx.removeStorageSync(TOKEN_KEY)
+}
+
+function getCourseSession() {
+  return wx.getStorageSync(COURSE_SESSION_KEY) || ''
+}
+
+function setCourseSession(sessionId) {
+  wx.setStorageSync(COURSE_SESSION_KEY, sessionId)
+}
+
+function removeCourseSession() {
+  wx.removeStorageSync(COURSE_SESSION_KEY)
 }
 
 function getUserInfo() {
@@ -46,6 +59,7 @@ function checkLogin() {
 
 function logout() {
   removeToken()
+  removeCourseSession()
   removeUserInfo()
   wx.reLaunch({ url: '/pages/index/index' })
 }
@@ -57,14 +71,14 @@ async function wxLogin() {
       throw new Error('微信登录失败')
     }
     const res = await request({
-      url: '/mall/api/miniprogram/wx-login',
+      url: '/mall/api/auth/wechat-login',
       method: 'POST',
       data: { code: loginRes.code }
     })
     if (res.success) {
       const data = res.data
-      if (data.token) {
-        setToken(data.token)
+      if (data.token || data.session_id) {
+        setToken(data.token || data.session_id)
         setUserInfo(data.user)
         return { needBindPhone: false, user: data.user }
       }
@@ -114,6 +128,7 @@ function request(options) {
       success(res) {
         if (res.statusCode === 401) {
           removeToken()
+          removeCourseSession()
           removeUserInfo()
           if (!isRedirecting401) {
             isRedirecting401 = true
@@ -140,6 +155,18 @@ function request(options) {
 }
 
 function courseRequest(options) {
+  const sessionId = getCourseSession()
+  const token = getToken()
+  const header = {
+    ...options.header
+  }
+  if (sessionId) {
+    header['Cookie'] = `session=${sessionId}`
+  }
+  if (token) {
+    header['Authorization'] = `Bearer ${token}`
+  }
+  options.header = header
   options.baseUrl = config.courseBaseUrl
   return request(options)
 }
@@ -148,6 +175,9 @@ module.exports = {
   getToken,
   setToken,
   removeToken,
+  getCourseSession,
+  setCourseSession,
+  removeCourseSession,
   getUserInfo,
   setUserInfo,
   removeUserInfo,

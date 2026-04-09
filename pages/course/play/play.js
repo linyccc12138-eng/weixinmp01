@@ -109,7 +109,7 @@ Page({
   async loadPlayData(chapterId) {
     try {
       const res = await auth.courseRequest({
-        url: `/course/api/play/${chapterId}`,
+        url: `/play/${chapterId}`,
         method: 'GET'
       })
       const data = res.data || res
@@ -149,7 +149,7 @@ Page({
     if (!this.data.currentTime || !this.data.chapterId) return
     try {
       await auth.courseRequest({
-        url: `/course/api/play/${this.data.chapterId}/progress`,
+        url: `/play/${this.data.chapterId}/progress`,
         method: 'POST',
         data: {
           current_time: this.data.currentTime,
@@ -199,7 +199,7 @@ Page({
   async reportSecurityEvent(eventType) {
     try {
       await auth.courseRequest({
-        url: '/course/api/security/event',
+        url: '/play/api/security-event',
         method: 'POST',
         data: {
           event_type: eventType,

@@ -56,7 +56,7 @@ Page({
     } catch (e) {}
 
     try {
-      const res = await auth.courseRequest({ url: '/course/api/user/stats', method: 'GET' })
+      const res = await auth.courseRequest({ url: '/user/api/profile', method: 'GET' })
       if (res.success && res.data) {
         this.setData({ stats: res.data })
       }

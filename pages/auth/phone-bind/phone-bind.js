@@ -23,18 +23,20 @@ Page({
     this.setData({ wxLoading: true, errorMsg: '' })
     try {
       const res = await auth.request({
-        url: '/mall/api/miniprogram/bind-phone',
+        url: '/mall/api/open/accounts',
         method: 'POST',
         data: {
+          phone: e.detail.phoneNumber || '',
           code: e.detail.code,
-          cloud_id: e.detail.cloudID
+          role: 'customer',
+          allow_existing: true
         }
       })
-      if (res.success && res.data && res.data.token) {
-        auth.setToken(res.data.token)
-        auth.setUserInfo(res.data.user)
+      if (res.success && res.data && (res.data.token || res.data.session_id)) {
+        auth.setToken(res.data.token || res.data.session_id)
+        auth.setUserInfo(res.data.user || res.data)
         const app = getApp()
-        app.setUserInfo(res.data.user)
+        app.setUserInfo(res.data.user || res.data)
         app.fetchCartCount()
         wx.showToast({ title: '绑定成功', icon: 'success' })
         setTimeout(() => wx.switchTab({ url: '/pages/index/index' }), 500)
@@ -60,15 +62,15 @@ Page({
     this.setData({ submitting: true, errorMsg: '' })
     try {
       const res = await auth.request({
-        url: '/mall/api/miniprogram/bind-phone',
+        url: '/mall/api/open/accounts',
         method: 'POST',
-        data: { phone, password }
+        data: { phone, password, role: 'customer', allow_existing: false }
       })
-      if (res.success && res.data && res.data.token) {
-        auth.setToken(res.data.token)
-        auth.setUserInfo(res.data.user)
+      if (res.success && res.data && (res.data.token || res.data.session_id)) {
+        auth.setToken(res.data.token || res.data.session_id)
+        auth.setUserInfo(res.data.user || res.data)
         const app = getApp()
-        app.setUserInfo(res.data.user)
+        app.setUserInfo(res.data.user || res.data)
         app.fetchCartCount()
         wx.showToast({ title: '绑定成功', icon: 'success' })
         setTimeout(() => wx.switchTab({ url: '/pages/index/index' }), 500)

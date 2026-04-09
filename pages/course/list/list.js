@@ -38,7 +38,7 @@ Page({
     this.setData({ loading: true })
     try {
       const res = await auth.courseRequest({
-        url: '/course/api/courses',
+        url: '/course/',
         method: 'GET',
         data: { page, page_size: 20, keyword: this.data.keyword }
       })

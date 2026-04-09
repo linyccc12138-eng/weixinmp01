@@ -11,7 +11,7 @@ Page({
     this.setData({ loading: true })
     try {
       const res = await auth.courseRequest({
-        url: '/course/api/user/play-history',
+        url: '/user/history',
         method: 'GET',
         data: { page: this.data.page, page_size: 20 }
       })
