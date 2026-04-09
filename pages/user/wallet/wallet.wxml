@@ -1,0 +1,31 @@
+<view class="page">
+  <view class="wallet-header">
+    <view class="wallet-balance">¥{{memberBalance}}</view>
+    <view class="wallet-label">当前余额</view>
+  </view>
+  <view class="wallet-info">
+    <view class="info-row">
+      <view class="info-label">会员等级</view>
+      <view class="info-value">{{memberInfo.fclassesname || '未绑定'}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">会员折扣</view>
+      <view class="info-value">{{memberDiscount < 1 ? memberDiscount * 10 + '折' : '无折扣'}}</view>
+    </view>
+  </view>
+  <view class="records-section">
+    <view class="section-title">消费记录</view>
+    <view class="record-list" wx:if="{{records.length > 0}}">
+      <view class="record-item" wx:for="{{records}}" wx:key="id">
+        <view class="record-info">
+          <view class="record-remark">{{item.remark}}</view>
+          <view class="record-time">{{item.created_at}}</view>
+        </view>
+        <view class="record-amount">¥{{item.amount}}</view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <view class="empty-state-text">暂无记录</view>
+    </view>
+  </view>
+</view>

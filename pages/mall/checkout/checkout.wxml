@@ -1,0 +1,59 @@
+<view class="page">
+  <view class="address-section" bindtap="selectAddress">
+    <view class="address-card" wx:if="{{selectedAddress}}">
+      <view class="address-name">{{selectedAddress.receiver_name}} {{selectedAddress.receiver_phone}}</view>
+      <view class="address-detail">{{selectedAddress.province}}{{selectedAddress.city}}{{selectedAddress.district}}{{selectedAddress.detail_address}}</view>
+    </view>
+    <view class="address-empty" wx:else>
+      <view class="empty-text">请选择收货地址</view>
+    </view>
+    <view class="address-arrow">›</view>
+  </view>
+
+  <view class="items-section">
+    <view class="item-row" wx:for="{{checkoutItems}}" wx:key="id">
+      <image class="item-thumb" src="{{item.cover_image}}" mode="aspectFill"></image>
+      <view class="item-info">
+        <view class="item-name ellipsis">{{item.product_name}}</view>
+        <view class="item-spec" wx:if="{{item.sku_name}}">{{item.sku_name}}</view>
+        <view class="item-price-row">
+          <view class="item-price">¥{{item.final_price || item.unit_price}}</view>
+          <view class="item-qty">×{{item.quantity}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="summary-section">
+    <view class="summary-row">
+      <view class="summary-label">商品总价</view>
+      <view class="summary-value">¥{{summary.subtotal}}</view>
+    </view>
+    <view class="summary-row" wx:if="{{summary.discount > 0}}">
+      <view class="summary-label">优惠金额</view>
+      <view class="summary-value discount">-¥{{summary.discount}}</view>
+    </view>
+    <view class="summary-row total">
+      <view class="summary-label">应付金额</view>
+      <view class="summary-value price">¥{{summary.payable}}</view>
+    </view>
+  </view>
+
+  <view class="payment-section">
+    <view class="payment-title">支付方式</view>
+    <view class="payment-option {{paymentMethod === 'balance' ? 'active' : ''}}" bindtap="selectPayment" data-method="balance">
+      <view class="payment-radio"></view>
+      <view class="payment-name">余额支付</view>
+      <view class="payment-balance" wx:if="{{memberInfo}}">余额 ¥{{memberBalance}}</view>
+    </view>
+    <view class="payment-option {{paymentMethod === 'wechat' ? 'active' : ''}}" bindtap="selectPayment" data-method="wechat">
+      <view class="payment-radio"></view>
+      <view class="payment-name">微信支付</view>
+    </view>
+  </view>
+
+  <view class="bottom-bar safe-bottom">
+    <view class="bottom-total">应付：<text class="bottom-price">¥{{summary.payable}}</text></view>
+    <button class="btn-primary" bindtap="submitOrder" loading="{{submitting}}" disabled="{{submitting}}">提交订单</button>
+  </view>
+</view>

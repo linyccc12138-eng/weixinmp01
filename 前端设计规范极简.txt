@@ -1,0 +1,267 @@
+设计规范文档
+设计风格：白色极简（White Minimalism）
+
+一、设计原则
+所有装饰只为功能服务，通过空间传递层次，不通过颜色或边框区分层级，动效传递质感。
+
+二、色彩系统
+主色调（Neutral Scale）
+色号HEX用途Gray-900#1A1A1A主文字、主按钮背景、强调色Gray-700#3D3D3D次级标题Gray-500#888888辅助文字、图标Gray-300#BBBBBB占位符、禁用态Gray-200#E5E5E5分割线、边框Gray-100#F7F7F7页面背景、卡片背景White#FFFFFF卡片表面、弹窗背景
+功能色（仅用于状态反馈，不做装饰）
+场景HEX信息/链接#3B82F6成功/完成#22C55E警告/价格#F59E0B错误/删除#EF4444
+规则：严禁在背景或大面积区域使用功能色，仅用于状态图标、角标、短文本。
+
+三、字体规范
+字体选择
+微信小程序系统默认字体栈：
+font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+iOS 使用 PingFang SC，Android 使用 Noto Sans CJK，均无需引入外部字体。
+字号层级
+层级字号字重行高颜色用途Display26px5001.3#1A1A1A欢迎页大标题H122px5001.3#1A1A1A页面主标题H218px5001.4#1A1A1A模块标题H316px5001.4#1A1A1A卡片标题Body14px4001.6#1A1A1A正文、说明Caption12px4001.5#888888辅助信息、时间Label11px4001.4#BBBBBB标签、角标、进度Price18px5001.2#1A1A1A商品价格
+规则：全站只使用 400（常规）和 500（中粗）两个字重，禁止使用 600/700/Bold，避免在白底上显得过重。
+文字间距
+
+中文正文：letter-spacing: 0（保持默认，中文无需增加字距）
+全大写英文标签（如 LIVE）：letter-spacing: 0.08em
+数字金额：font-variant-numeric: tabular-nums（对齐数字宽度）
+
+
+四、间距系统
+采用 4px 基础单位，所有间距均为其倍数：
+名称值用途space-14px图标与文字间距space-28px同一组内部间距space-312px卡片内元素间距space-416px卡片内边距、列表项间距space-520px模块间距space-624px页面水平边距space-832px大模块间距
+页面边距：左右各 24px，顶部 16px，底部需预留底部导航高度 calc(56px + env(safe-area-inset-bottom))。
+
+五、圆角规范
+场景圆角值按钮（胶囊型）100px（全圆角）卡片16px图片缩略图12px标签/Tag100px（全圆角）输入框12px弹窗24px图标容器（小）8px底部 Sheet24px 24px 0 0
+
+六、图片规范
+课程封面图
+
+尺寸：16:9 比例，展示尺寸 342 × 192px（750rpx 屏幕下）
+占位图：灰色 #F7F7F7 底 + 居中播放图标
+圆角：12px
+遮罩：进度条叠加时，底部添加 linear-gradient(transparent, rgba(0,0,0,0.3))
+
+商品图片
+
+尺寸：1:1 正方形，展示尺寸约 160 × 160px
+背景：#F7F7F7，图片居中等比缩放
+圆角：12px
+禁止：商品图不加阴影、不加边框
+
+用户头像
+
+形状：正圆，40px × 40px
+无头像时：取昵称首字，灰底白字，背景色按用户 ID hash 从 6 个预设色中取色
+
+
+七、组件规范
+7.1 按钮
+主按钮（Primary）
+背景: #1A1A1A
+文字: #FFFFFF  字号: 15px  字重: 500
+高度: 48px  最小宽度: 120px
+圆角: 100px（胶囊）
+内边距: 0 24px
+次级按钮（Ghost）
+背景: transparent
+边框: 1px solid #E5E5E5
+文字: #1A1A1A  字号: 15px  字重: 500
+高度: 48px
+小尺寸按钮（用于卡片内）
+高度: 36px  字号: 13px  内边距: 0 16px
+危险按钮
+背景: #FFF0F0  边框: 1px solid #FFCCCC  文字: #C0392B
+按下动效：见第八节
+7.2 输入框
+高度: 48px
+背景: #F7F7F7
+边框: 1px solid transparent（聚焦时变为 #1A1A1A）
+圆角: 12px
+字号: 14px  颜色: #1A1A1A
+占位符颜色: #BBBBBB
+内边距: 0 16px
+过渡: border-color 200ms ease
+7.3 卡片
+基础卡片
+背景: #FFFFFF
+边框: 1px solid #F0F0F0
+圆角: 16px
+内边距: 16px
+阴影: 无
+课程进度卡片（含进度条）
+内部结构:
+  封面图 (16:9, 圆角12px)
+  课程名 (16px 500)
+  章节信息 (12px #888)
+  进度条 (高度3px)
+  进度文字 (11px #BBB)
+商品卡片（双列网格）
+内部结构:
+  商品图 (1:1, 圆角12px)
+  商品名 (13px 500, 最多2行截断)
+  价格行: 现价(16px 500) + 原价(12px #BBB 删除线)
+  
+双列间距: 10px
+列宽: (屏幕宽 - 48px 边距 - 10px 间距) / 2
+7.4 底部导航栏
+高度: 56px + safe-area-inset-bottom
+背景: rgba(255,255,255,0.92)
+顶部边框: 1px solid #F0F0F0
+模糊: backdrop-filter: blur(10px)
+
+图标尺寸: 24px × 24px
+文字: 10px  颜色(未选中): #888  颜色(选中): #1A1A1A
+图标-文字间距: 3px
+
+Tab 数量: 4个（首页、课程、商城、我的）
+选中态：图标颜色变为 #1A1A1A，文字变为 #1A1A1A + font-weight: 500。无下划线、无背景色高亮，保持极简。
+7.5 标签/Tag
+背景: #F5F5F5
+文字: 11px  颜色: #888888
+圆角: 100px
+内边距: 3px 10px
+特殊标签（直播中）：背景 #FFF0F0，文字 #EF4444，左侧加 6px 红点。
+7.6 进度条
+轨道高度: 3px（视频进度）/ 6px（课程完成度）
+轨道背景: #F0F0F0
+填充颜色: #1A1A1A
+圆角: 100px
+7.7 弹窗
+遮罩: rgba(0,0,0,0.4)
+卡片背景: #FFFFFF
+圆角: 24px
+内边距: 28px 24px 24px
+最大宽度: 320px
+标题: 17px 500
+内容: 14px 400 #888  行高: 1.6
+按钮行: 高度44px，两按钮横排，间距8px
+
+八、动效规范（核心）
+8.1 弹簧曲线（全局基准）
+所有带"弹性"感的动画，统一使用 过阻尼弹簧参数：
+css/* 标准弹簧（按钮、卡片） */
+transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+/* 强弹簧（弹窗、Sheet） */
+transition-timing-function: cubic-bezier(0.34, 1.7, 0.64, 1);
+
+/* 弱弹簧（进度条、颜色过渡） */
+transition-timing-function: cubic-bezier(0.34, 1.1, 0.64, 1);
+在微信小程序中，使用 wx.createAnimation() 的 timingFunction: 'ease' 无法完全模拟弹簧，建议通过 CSS 动画 + WebGL 或 Lottie 实现精细弹簧，也可通过分段关键帧近似：
+css@keyframes springPress {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.93); }
+  70%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+8.2 点击反馈（真实按下感）
+元素压缩比例持续时间触发方式主/次按钮scale(0.93)120msbindtouchstart / bindtouchend卡片（课程/商品）scale(0.97)140ms同上底部 Tab 图标scale(0.88)100ms同上图标按钮（小）scale(0.85)100ms同上列表项背景色变为 #F7F7F7，无缩放150ms—
+实现方式（微信小程序推荐）：
+javascript// 在组件内使用 animation 对象
+onTouchStart() {
+  this.animation.scale(0.93).step({ duration: 80, timingFunction: 'ease-in' });
+  this.setData({ animationData: this.animation.export() });
+},
+onTouchEnd() {
+  this.animation.scale(1).step({ duration: 300, timingFunction: 'ease-out' });
+  this.setData({ animationData: this.animation.export() });
+}
+释放时回弹，落点处有轻微超调（scale 先到 1.02 再回 1.0），产生"弹簧落地"感。
+8.3 等待动画（Loading）
+样式：圆形进度环，28px × 28px，线宽 2.5px。
+
+轨道色：#EEEEEE
+旋转色：#1A1A1A（顶部 180° 可见，底部渐隐）
+旋转速度：0.7s linear infinite
+
+出现/消失：opacity 从 0 → 1，200ms ease，消失时同理。禁止使用骨架屏（白色极简下骨架屏视觉太重），改用轻量 spinner + 灰色占位矩形。
+全屏 Loading：居中 spinner + 下方 12px #888 提示文字（如"加载中..."），无背景遮罩。
+8.4 进度条动画
+触发时机：页面加载完成后 300ms 延迟启动，避免与页面入场动画叠加。
+初始状态: width = 0%
+终止状态: width = 实际进度%
+持续时间: 600ms
+缓动: cubic-bezier(0.34, 1.2, 0.64, 1)（有轻微超调）
+视频播放进度条拖拽时：进度条手柄出现动画 scale(1 → 1.3)，200ms spring；松开时 scale(1.3 → 1)，300ms spring。
+8.5 弹窗动画
+出现：
+初始: transform: scale(0.4), opacity: 0
+终止: transform: scale(1), opacity: 1
+持续: 450ms
+曲线: cubic-bezier(0.34, 1.7, 0.64, 1)（强弹簧）
+
+遮罩: opacity 0→0.4, 200ms ease（早于内容出现50ms）
+消失：
+初始: transform: scale(1), opacity: 1
+终止: transform: scale(0.85), opacity: 0
+持续: 200ms
+曲线: ease-in（消失不需要弹簧感）
+底部 Sheet（商品详情、筛选）：
+出现: translateY(100%) → translateY(0), 400ms spring
+消失: translateY(0) → translateY(100%), 250ms ease-in
+8.6 页面切换动画
+
+进入新页面：translateX(100%) → translateX(0), 350ms ease-out
+返回上一页：translateX(0) → translateX(100%), 300ms ease-in
+当前页随之轻微左移：translateX(0) → translateX(-30%), 增加层次感
+
+8.7 列表/卡片入场动画
+列表项逐个入场（瀑布流效果）：
+每项: translateY(16px) + opacity(0) → translateY(0) + opacity(1)
+延迟: index × 50ms（最多到 300ms，之后不再延迟）
+持续: 350ms
+曲线: cubic-bezier(0.34, 1.2, 0.64, 1)
+
+九、课程播放模块规范
+播放器
+视频区域: 16:9，顶部悬浮，背景 #000
+控制栏: 底部浮层，渐变遮罩 linear-gradient(transparent, rgba(0,0,0,0.6))
+控制栏高度: 60px
+控制栏元素: 播放/暂停图标 + 进度条 + 时间 + 全屏
+图标颜色: #FFFFFF
+进度条高度: 3px（拖拽时变为6px，动画300ms）
+课程目录
+每个章节项高度: 56px
+结构: 序号(12px #BBB) + 标题(14px) + 时长(12px #BBB) + 完成图标
+已完成项: 标题颜色 #BBB，右侧绿色勾图标
+当前播放项: 背景 #F7F7F7，左侧 3px #1A1A1A 竖线
+课程进度卡片
+进度条颜色随完成度变化：0~30% #BBBBBB，30~80% #888888，80~100% #22C55E（过渡使用 200ms ease）。
+
+十、电商购物模块规范
+商品列表页
+
+布局：双列瀑布流，列间距 10px，行间距 10px
+筛选栏：水平滚动 Chip 组，高度 40px，Chip 圆角 100px
+选中 Chip：背景 #1A1A1A，文字 #FFFFFF
+
+商品详情页
+图片轮播: 满屏宽，16:9，圆角0（详情页取消圆角强调沉浸感）
+轮播指示点: 底部居中，选中点宽16px(胶囊)，未选中点宽6px，颜色#1A1A1A/透明度0.3
+购买按钮区（底部固定）
+区域高度: 64px + safe-area-inset-bottom
+背景: rgba(255,255,255,0.95)  顶部边框: 1px solid #F0F0F0
+左侧: 收藏图标 + 购物车图标（各44px × 44px 点击区）
+右侧: 加入购物车按钮(Ghost) + 立即购买按钮(Primary)，两按钮各占约120px
+购物车
+商品行高度: 80px
+结构: 复选框(20px) + 图片(60px正方形) + 文字信息 + 数量调节器
+数量调节器: 减号 + 数字 + 加号，高度32px，圆角100px，边框1px solid #E5E5E5
+
+十一、图标规范
+
+风格：线性图标（Stroke），线宽 1.5px，端点 round，角点 round
+尺寸：24×24px（导航栏）、20×20px（卡片内）、16×16px（行内）
+颜色：跟随文字颜色，不单独设置
+禁止：填充图标（Filled）、混用不同风格的图标库
+推荐图标库：Lucide（线宽与规范一致，有微信小程序适配版本）
+
+
+十二、无障碍与边界态
+场景处理方式图片加载失败显示灰色占位块 + 居中图标，不显示 broken image空状态页居中插画（极简线条风）+ 16px 说明文字 + 主按钮网络错误底部 Toast 提示（高度48px，背景#1A1A1A，文字白色，自动消失3s）内容截断文字最多2行，超出显示 ...，不允许文字溢出容器骨架屏替代用 #F0F0F0 圆角矩形占位 + 闪烁动画（opacity 0.5→1→0.5，1.5s loop）
+
+十三、暗色模式（可选，建议支持）
+跟随系统暗色模式，色彩映射：
+浅色深色#FFFFFF#1A1A1A#F7F7F7#242424#1A1A1A（文字）#F0F0F0#888888（文字）#666666#E5E5E5（边框）#333333
+动效参数在暗色模式下保持不变。

@@ -1,0 +1,48 @@
+<view class="play-page">
+  <view class="video-container">
+    <video id="courseVideo" class="video-player" src="{{videoSrc}}" controls enable-play-gesture
+           show-center-play-btn show-play-btn show-fullscreen-btn
+           initial-time="{{resumeTime}}" object-fit="contain"
+           bindplay="onPlay" bindpause="onPause" bindtimeupdate="onTimeUpdate"
+           bindended="onEnded" bindfullscreenchange="onFullscreenChange"
+           enable-progress-gesture>
+    </video>
+    <view class="watermark-overlay" wx:if="{{showWatermark}}">
+      <view class="watermark-text">{{watermarkText}}</view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="play-content">
+    <view class="chapter-info-section">
+      <view class="chapter-title">{{chapter.title}}</view>
+      <view class="chapter-course">{{course.title}}</view>
+    </view>
+
+    <view class="chapters-panel">
+      <view class="panel-header" bindtap="toggleChapterList">
+        <view class="panel-title">章节列表</view>
+        <view class="panel-toggle">{{showChapterList ? '收起' : '展开'}}</view>
+      </view>
+      <view class="chapter-list" wx:if="{{showChapterList}}">
+        <view class="chapter-item {{item.id === chapter.id ? 'active' : ''}} {{item.is_completed ? 'completed' : ''}}"
+              wx:for="{{allChapters}}" wx:key="id"
+              bindtap="switchChapter" data-id="{{item.id}}">
+          <view class="chapter-index">{{index + 1}}</view>
+          <view class="chapter-name ellipsis">{{item.title}}</view>
+          <view class="chapter-status-icon" wx:if="{{item.is_completed}}">✓</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="speed-section">
+      <view class="speed-label">播放速度</view>
+      <scroll-view scroll-x class="speed-list">
+        <view class="speed-item {{item === playbackRate ? 'active' : ''}}"
+              wx:for="{{playbackRates}}" wx:key="*this"
+              bindtap="setSpeed" data-rate="{{item}}">
+          {{item}}x
+        </view>
+      </scroll-view>
+    </view>
+  </scroll-view>
+</view>

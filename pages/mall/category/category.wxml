@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索商品" value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearch" confirm-type="search" />
+  </view>
+
+  <view class="filter-bar" wx:if="{{categories.length > 0}}">
+    <scroll-view scroll-x class="filter-scroll">
+      <view class="filter-item {{activeCategory === 0 ? 'active' : ''}}" bindtap="selectCategory" data-id="0">全部</view>
+      <view class="filter-item {{activeCategory === item.id ? 'active' : ''}}" wx:for="{{categories}}" wx:key="id" bindtap="selectCategory" data-id="{{item.id}}">
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="product-grid" wx:if="{{products.length > 0}}">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="goProduct" data-id="{{item.id}}">
+      <image class="product-thumb" src="{{item.cover_image}}" mode="aspectFill"></image>
+      <view class="product-info">
+        <view class="product-name ellipsis-2">{{item.name}}</view>
+        <view class="product-price-row">
+          <view class="product-price">¥{{item.price}}</view>
+          <view class="product-original" wx:if="{{item.original_price > item.price}}">¥{{item.original_price}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <view class="empty-state-text">暂无商品</view>
+  </view>
+
+  <view class="loading-spinner" wx:if="{{loading}}">
+    <view class="spinner"></view>
+  </view>
+</view>

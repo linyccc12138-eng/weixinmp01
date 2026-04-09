@@ -1,0 +1,17 @@
+<view class="page">
+  <view class="activity-cover" wx:if="{{activity.thumbnail_image}}">
+    <image class="cover-image" src="{{activity.thumbnail_image}}" mode="aspectFill"></image>
+  </view>
+  <view class="activity-info">
+    <view class="activity-title">{{activity.title}}</view>
+    <view class="activity-summary" wx:if="{{activity.summary}}">{{activity.summary}}</view>
+    <view class="activity-time" wx:if="{{activity.starts_at || activity.ends_at}}">
+      <text wx:if="{{activity.starts_at}}">{{activity.starts_at}}</text>
+      <text wx:if="{{activity.starts_at && activity.ends_at}}"> - </text>
+      <text wx:if="{{activity.ends_at}}">{{activity.ends_at}}</text>
+    </view>
+  </view>
+  <view class="activity-content" wx:if="{{activity.content_html}}">
+    <rich-text nodes="{{activity.content_html}}"></rich-text>
+  </view>
+</view>

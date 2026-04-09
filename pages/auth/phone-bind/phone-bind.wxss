@@ -1,0 +1,63 @@
+.bind-page {
+  min-height: 100vh;
+  padding: 48px 24px 32px;
+  background: #FFFFFF;
+}
+
+.bind-header {
+  margin-bottom: 32px;
+}
+
+.bind-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #1A1A1A;
+}
+
+.bind-desc {
+  font-size: 14px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.wx-phone-btn {
+  width: 100%;
+  background: #0D9488;
+}
+
+.divider-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: #E5E5E5;
+}
+
+.divider-label {
+  font-size: 12px;
+  color: #BBB;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 14px;
+  color: #1A1A1A;
+  margin-bottom: 8px;
+}
+
+.form-error {
+  font-size: 12px;
+  color: #EF4444;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #FFF0F0;
+  border-radius: 8px;
+}

@@ -1,0 +1,13 @@
+<view class="page">
+  <view class="bind-status">
+    <view class="status-icon {{isBound ? 'bound' : 'unbound'}}">{{isBound ? '✓' : '!'}}</view>
+    <view class="status-text">{{isBound ? '已绑定微信' : '未绑定微信'}}</view>
+    <view class="status-desc" wx:if="{{isBound}}">当前账号已绑定微信，可使用微信快捷登录</view>
+    <view class="status-desc" wx:else>绑定微信后可使用微信快捷登录</view>
+  </view>
+
+  <view class="bind-actions">
+    <button class="btn-primary" wx:if="{{!isBound}}" bindtap="bindWechat" loading="{{submitting}}" disabled="{{submitting}}">绑定微信</button>
+    <button class="btn-danger" wx:if="{{isBound}}" bindtap="unbindWechat" loading="{{submitting}}" disabled="{{submitting}}">解除绑定</button>
+  </view>
+</view>

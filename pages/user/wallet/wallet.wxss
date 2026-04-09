@@ -1,0 +1,16 @@
+.page { }
+.wallet-header { padding: 32px 24px; background: #1A1A1A; text-align: center; }
+.wallet-balance { font-size: 36px; font-weight: 500; color: #FFFFFF; font-variant-numeric: tabular-nums; }
+.wallet-label { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+.wallet-info { padding: 16px 24px; background: #FFFFFF; }
+.info-row { display: flex; justify-content: space-between; padding: 8px 0; }
+.info-label { font-size: 14px; color: #888; }
+.info-value { font-size: 14px; color: #1A1A1A; }
+.records-section { padding: 16px 24px; margin-top: 8px; background: #FFFFFF; }
+.section-title { font-size: 16px; font-weight: 500; color: #1A1A1A; margin-bottom: 12px; }
+.record-list { }
+.record-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F7F7F7; }
+.record-info { }
+.record-remark { font-size: 14px; color: #1A1A1A; }
+.record-time { font-size: 12px; color: #888; margin-top: 4px; }
+.record-amount { font-size: 16px; font-weight: 500; color: #1A1A1A; font-variant-numeric: tabular-nums; }

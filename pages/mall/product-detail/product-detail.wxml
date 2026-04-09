@@ -1,0 +1,77 @@
+<view class="page">
+  <swiper class="gallery-swiper" indicator-dots indicator-color="rgba(26,26,26,0.3)" indicator-active-color="#1A1A1A" circular>
+    <swiper-item wx:for="{{galleryImages}}" wx:key="*this">
+      <image class="gallery-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-src="{{item}}"></image>
+    </swiper-item>
+  </swiper>
+
+  <view class="product-info-section">
+    <view class="product-name">{{product.name}}</view>
+    <view class="product-subtitle" wx:if="{{product.subtitle}}">{{product.subtitle}}</view>
+    <view class="product-summary" wx:if="{{product.summary}}">{{product.summary}}</view>
+    <view class="price-row">
+      <view class="current-price">¥{{currentPrice}}</view>
+      <view class="original-price" wx:if="{{product.price && product.price > currentPrice}}">¥{{product.price}}</view>
+      <view class="member-badge" wx:if="{{showMemberPrice}}">会员价</view>
+    </view>
+    <view class="stock-info">库存 {{currentStock}}</view>
+  </view>
+
+  <view class="sku-section" bindtap="openSkuPicker" wx:if="{{hasSku}}">
+    <view class="sku-label">选择规格</view>
+    <view class="sku-value">{{selectedSkuText || '请选择'}}</view>
+    <view class="sku-arrow">›</view>
+  </view>
+
+  <view class="detail-section">
+    <view class="detail-title">商品详情</view>
+    <rich-text class="detail-content" nodes="{{product.detail_html}}"></rich-text>
+  </view>
+
+  <view class="bottom-bar safe-bottom">
+    <view class="bar-icon" bindtap="goCart">
+      <view class="icon-text">🛒</view>
+      <view class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount}}</view>
+    </view>
+    <view class="bar-actions">
+      <button class="btn-ghost btn-small" bindtap="addToCart">加入购物车</button>
+      <button class="btn-primary btn-small" bindtap="buyNow">立即购买</button>
+    </view>
+  </view>
+
+  <view class="sku-mask" wx:if="{{showSkuPicker}}" bindtap="closeSkuPicker"></view>
+  <view class="sku-panel {{showSkuPicker ? 'show' : ''}}">
+    <view class="sku-panel-header">
+      <image class="sku-thumb" src="{{product.cover_image}}" mode="aspectFill"></image>
+      <view class="sku-panel-info">
+        <view class="sku-panel-price">¥{{currentPrice}}</view>
+        <view class="sku-panel-stock">库存 {{currentStock}}</view>
+        <view class="sku-panel-selected" wx:if="{{selectedSkuText}}">已选：{{selectedSkuText}}</view>
+      </view>
+      <view class="sku-close" bindtap="closeSkuPicker">×</view>
+    </view>
+    <scroll-view scroll-y class="sku-panel-body">
+      <view class="sku-group" wx:for="{{skuOptionsList}}" wx:key="name">
+        <view class="sku-group-name">{{item.name}}</view>
+        <view class="sku-options">
+          <view class="sku-option {{selectedOptions[item.name] === option ? 'active' : ''}}"
+                wx:for="{{item.options}}" wx:key="*this"
+                bindtap="selectOption" data-name="{{item.name}}" data-value="{{option}}">
+            {{option}}
+          </view>
+        </view>
+      </view>
+      <view class="quantity-section">
+        <view class="quantity-label">数量</view>
+        <view class="quantity-control">
+          <view class="qty-btn" bindtap="changeQty" data-delta="-1">-</view>
+          <input class="qty-input" type="number" value="{{quantity}}" bindinput="onQtyInput" />
+          <view class="qty-btn" bindtap="changeQty" data-delta="1">+</view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="sku-panel-footer safe-bottom">
+      <button class="btn-primary" bindtap="confirmSku">确认</button>
+    </view>
+  </view>
+</view>

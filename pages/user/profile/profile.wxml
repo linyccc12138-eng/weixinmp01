@@ -1,0 +1,65 @@
+<view class="page">
+  <view class="profile-header">
+    <view class="avatar">{{initial}}</view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.account_label || userInfo.nickname || '未登录'}}</view>
+      <view class="user-phone">{{maskedPhone}}</view>
+    </view>
+    <view class="login-btn" wx:if="{{!isLoggedIn}}" bindtap="goLogin">登录</view>
+  </view>
+
+  <view class="member-card" wx:if="{{memberInfo}}" bindtap="goWallet">
+    <view class="member-level">{{memberInfo.fclassesname || '会员'}}</view>
+    <view class="member-discount" wx:if="{{memberDiscount < 1}}">{{memberDiscount * 10}}折优惠</view>
+    <view class="member-balance">余额 ¥{{memberBalance}}</view>
+  </view>
+
+  <view class="stats-card" wx:if="{{isLoggedIn}}">
+    <view class="stat-item" bindtap="goMyCourses">
+      <view class="stat-value">{{stats.my_courses_count || 0}}</view>
+      <view class="stat-label">我的课程</view>
+    </view>
+    <view class="stat-item" bindtap="goOrders">
+      <view class="stat-value">{{stats.order_count || 0}}</view>
+      <view class="stat-label">我的订单</view>
+    </view>
+    <view class="stat-item" bindtap="goHistory">
+      <view class="stat-value">{{stats.completed_chapters || 0}}</view>
+      <view class="stat-label">已学完</view>
+    </view>
+  </view>
+
+  <view class="menu-list">
+    <view class="menu-item" bindtap="goMyCourses" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">我的课程</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goOrders" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">我的订单</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goAddresses" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">收货地址</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goWallet" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">会员钱包</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goHistory" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">播放历史</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goChangePassword" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">修改密码</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item" bindtap="goBindWechat" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">微信绑定</view>
+      <view class="menu-arrow">›</view>
+    </view>
+    <view class="menu-item logout" bindtap="onLogout" wx:if="{{isLoggedIn}}">
+      <view class="menu-text">退出登录</view>
+    </view>
+  </view>
+</view>

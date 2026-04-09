@@ -1,0 +1,14 @@
+.page { }
+.history-list { padding: 12px 24px; }
+.history-item { padding: 14px 0; border-bottom: 1px solid #F7F7F7; }
+.history-info { }
+.history-title { font-size: 15px; font-weight: 500; color: #1A1A1A; }
+.history-course { font-size: 12px; color: #888; margin-top: 4px; }
+.history-meta { display: flex; gap: 12px; margin-top: 6px; }
+.meta-time { font-size: 11px; color: #BBB; }
+.meta-progress { font-size: 11px; color: #888; }
+.history-progress { margin-top: 8px; }
+.progress-bar { height: 3px; background: #F0F0F0; border-radius: 100px; overflow: hidden; }
+.progress-fill { height: 100%; background: #1A1A1A; border-radius: 100px; }
+.spinner { width: 28px; height: 28px; border: 2.5px solid #EEE; border-top-color: #1A1A1A; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 16px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,11 @@
+.page { padding-bottom: 80px; }
+.address-list { padding: 12px 24px; }
+.address-card { background: #FFFFFF; border: 1px solid #F0F0F0; border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+.address-info { }
+.address-name { font-size: 16px; font-weight: 500; color: #1A1A1A; }
+.address-detail { font-size: 13px; color: #888; margin-top: 4px; line-height: 1.5; }
+.address-default { display: inline-flex; font-size: 11px; color: #0D9488; background: rgba(13,148,136,0.1); padding: 2px 8px; border-radius: 100px; margin-top: 6px; }
+.address-actions { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #F7F7F7; }
+.action-btn { font-size: 13px; color: #888; }
+.action-btn.delete { color: #EF4444; }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 24px; background: #FFFFFF; border-top: 1px solid #F0F0F0; z-index: 100; }

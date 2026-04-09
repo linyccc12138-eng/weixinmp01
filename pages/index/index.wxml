@@ -1,0 +1,73 @@
+<view class="page">
+  <view class="header">
+    <view class="header-title">欢迎来到奇妙世界入口</view>
+    <view class="header-subtitle">探索课程与商城</view>
+  </view>
+
+  <view class="entry-cards">
+    <view class="entry-card" bindtap="goCourse">
+      <view class="entry-icon course-icon">课</view>
+      <view class="entry-info">
+        <view class="entry-title">知识星球</view>
+        <view class="entry-desc">进入课程中心，继续学习与扩展知识</view>
+      </view>
+      <view class="entry-arrow">›</view>
+    </view>
+    <view class="entry-card" bindtap="goMall">
+      <view class="entry-icon mall-icon">市</view>
+      <view class="entry-info">
+        <view class="entry-title">神奇喵喵屋</view>
+        <view class="entry-desc">浏览商品、会员折扣与购物流程</view>
+      </view>
+      <view class="entry-arrow">›</view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{activities.length > 0}}">
+    <view class="section-header">
+      <view class="section-title">热门活动</view>
+    </view>
+    <scroll-view scroll-x class="activity-scroll">
+      <view class="activity-item" wx:for="{{activities}}" wx:key="id" bindtap="goActivity" data-id="{{item.id}}">
+        <image class="activity-thumb" src="{{item.thumbnail_image}}" mode="aspectFill" wx:if="{{item.thumbnail_image}}"></image>
+        <view class="activity-thumb activity-placeholder" wx:else></view>
+        <view class="activity-info">
+          <view class="activity-title ellipsis">{{item.title}}</view>
+          <view class="activity-summary ellipsis-2">{{item.summary}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="section" wx:if="{{newProducts.length > 0}}">
+    <view class="section-header">
+      <view class="section-title">商品上新</view>
+      <view class="section-more" bindtap="goMall">进入商城 ›</view>
+    </view>
+    <scroll-view scroll-x class="product-scroll">
+      <view class="product-item" wx:for="{{newProducts}}" wx:key="id" bindtap="goProduct" data-id="{{item.id}}">
+        <image class="product-thumb" src="{{item.cover_image}}" mode="aspectFill"></image>
+        <view class="product-name ellipsis">{{item.name}}</view>
+        <view class="product-price">¥{{item.price}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="section" wx:if="{{courses.length > 0}}">
+    <view class="section-header">
+      <view class="section-title">推荐课程</view>
+    </view>
+    <view class="course-list">
+      <view class="course-item" wx:for="{{courses}}" wx:key="id" bindtap="goCourseDetail" data-id="{{item.id}}">
+        <image class="course-thumb" src="{{item.cover_image || item.thumbnail_url}}" mode="aspectFill" wx:if="{{item.cover_image || item.thumbnail_url}}"></image>
+        <view class="course-thumb course-placeholder" wx:else>
+          <view class="course-placeholder-text">课</view>
+        </view>
+        <view class="course-info">
+          <view class="course-name ellipsis-2">{{item.name || item.title}}</view>
+          <view class="course-summary ellipsis">{{item.summary || item.description}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,45 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{activeGroup === item.key ? 'active' : ''}}" wx:for="{{groups}}" wx:key="key" bindtap="switchGroup" data-key="{{item.key}}">
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="order-list" wx:if="{{orders.length > 0}}">
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="order-header">
+        <view class="order-no">{{item.order_no}}</view>
+        <view class="order-status">{{item.statusLabel}}</view>
+      </view>
+      <view class="order-items">
+        <view class="order-item" wx:for="{{item.items}}" wx:for-item="oi" wx:key="id">
+          <image class="oi-thumb" src="{{oi.cover_image}}" mode="aspectFill"></image>
+          <view class="oi-info">
+            <view class="oi-name ellipsis">{{oi.product_name}}</view>
+            <view class="oi-spec" wx:if="{{oi.sku_name}}">{{oi.sku_name}}</view>
+          </view>
+          <view class="oi-right">
+            <view class="oi-price">¥{{oi.line_total || oi.final_price}}</view>
+            <view class="oi-qty">×{{oi.quantity}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="order-footer">
+        <view class="order-amount">¥{{item.payable_amount}}</view>
+        <view class="order-actions">
+          <view class="action-btn" wx:if="{{item.status === 'pending_payment'}}" catchtap="payOrder" data-id="{{item.id}}">付款</view>
+          <view class="action-btn" wx:if="{{item.status === 'pending_payment' || item.status === 'pending_shipment'}}" catchtap="cancelOrder" data-id="{{item.id}}">取消</view>
+          <view class="action-btn" wx:if="{{item.status === 'pending_receipt'}}" catchtap="completeOrder" data-id="{{item.id}}">确认收货</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <view class="empty-state-text">暂无订单</view>
+  </view>
+
+  <view class="loading-spinner" wx:if="{{loading}}">
+    <view class="spinner"></view>
+  </view>
+</view>

@@ -1,0 +1,56 @@
+<view class="page">
+  <view class="course-header">
+    <image class="course-cover" src="{{course.thumbnail_url}}" mode="aspectFill" wx:if="{{course.thumbnail_url}}"></image>
+    <view class="course-cover course-cover-placeholder" wx:else></view>
+    <view class="header-overlay">
+      <view class="course-title">{{course.title}}</view>
+      <view class="course-desc">{{course.description || '暂无课程简介'}}</view>
+      <view class="course-meta">
+        <view class="meta-item">{{chapters.length}} 章节</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="progress-section" wx:if="{{hasPermission && progress}}">
+    <view class="progress-header">
+      <view class="progress-label">学习进度</view>
+      <view class="progress-value">{{progress.percentage}}%</view>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{progress.percentage}}%"></view>
+    </view>
+    <view class="continue-btn" wx:if="{{lastChapter}}" bindtap="continuePlay">
+      继续学习：{{lastChapter.title}}
+    </view>
+  </view>
+
+  <view class="lock-notice" wx:if="{{!hasPermission}}">
+    <view class="lock-text">该课程暂未对您开放，请联系管理员获取学习权限</view>
+  </view>
+
+  <view class="chapters-section">
+    <view class="section-title">课程章节</view>
+    <view class="chapter-list" wx:if="{{chapters.length > 0}}">
+      <view class="chapter-item {{item.is_locked ? 'locked' : ''}} {{item.is_completed ? 'completed' : ''}}"
+            wx:for="{{chapters}}" wx:key="id"
+            bindtap="playChapter" data-id="{{item.id}}" data-locked="{{item.is_locked}}">
+        <view class="chapter-index">{{index + 1}}</view>
+        <view class="chapter-info">
+          <view class="chapter-title ellipsis">{{item.title}}</view>
+          <view class="chapter-meta">
+            <view class="meta-text">{{item.file_id ? '含视频' : '无视频'}}</view>
+            <view class="meta-text completed-text" wx:if="{{item.is_completed}}">已学完</view>
+          </view>
+        </view>
+        <view class="chapter-status">
+          <view class="status-icon completed-icon" wx:if="{{item.is_completed}}">✓</view>
+          <view class="status-icon play-icon" wx:elif="{{!item.is_locked}}">▶</view>
+          <view class="status-icon lock-icon" wx:else>🔒</view>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:else>
+      <view class="empty-state-text">暂无章节</view>
+    </view>
+  </view>
+</view>

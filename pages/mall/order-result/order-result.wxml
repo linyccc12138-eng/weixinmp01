@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="result-section">
+    <view class="result-icon {{success ? 'success' : 'fail'}}">{{success ? '✓' : '!'}}</view>
+    <view class="result-title">{{success ? '支付成功' : '支付未完成'}}</view>
+    <view class="result-desc" wx:if="{{!success}}">您可以稍后在订单列表中继续支付</view>
+  </view>
+
+  <view class="order-info" wx:if="{{order}}">
+    <view class="info-row">
+      <view class="info-label">订单号</view>
+      <view class="info-value">{{order.order_no}}</view>
+    </view>
+    <view class="info-row">
+      <view class="info-label">支付金额</view>
+      <view class="info-value price">¥{{order.payable_amount}}</view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button class="btn-primary" bindtap="goOrderDetail">查看订单</button>
+    <button class="btn-ghost" bindtap="goHome">返回首页</button>
+  </view>
+</view>

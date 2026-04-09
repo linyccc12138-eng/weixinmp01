@@ -1,0 +1,68 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/course/list/list",
+    "pages/course/detail/detail",
+    "pages/course/play/play",
+    "pages/mall/home/home",
+    "pages/mall/category/category",
+    "pages/mall/product-detail/product-detail",
+    "pages/mall/cart/cart",
+    "pages/mall/checkout/checkout",
+    "pages/mall/order-list/order-list",
+    "pages/mall/order-detail/order-detail",
+    "pages/mall/activity-detail/activity-detail",
+    "pages/mall/order-result/order-result",
+    "pages/user/profile/profile",
+    "pages/user/addresses/addresses",
+    "pages/user/address-edit/address-edit",
+    "pages/user/wallet/wallet",
+    "pages/user/change-password/change-password",
+    "pages/user/bind-wechat/bind-wechat",
+    "pages/user/play-history/play-history",
+    "pages/course/my-courses/my-courses",
+    "pages/auth/login/login",
+    "pages/auth/phone-bind/phone-bind"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F7F7",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#1A1A1A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tabbar/home.png",
+        "selectedIconPath": "images/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/course/list/list",
+        "text": "课程",
+        "iconPath": "images/tabbar/course.png",
+        "selectedIconPath": "images/tabbar/course-active.png"
+      },
+      {
+        "pagePath": "pages/mall/home/home",
+        "text": "商城",
+        "iconPath": "images/tabbar/mall.png",
+        "selectedIconPath": "images/tabbar/mall-active.png"
+      },
+      {
+        "pagePath": "pages/user/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tabbar/user.png",
+        "selectedIconPath": "images/tabbar/user-active.png"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

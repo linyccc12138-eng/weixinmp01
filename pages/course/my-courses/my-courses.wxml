@@ -1,0 +1,43 @@
+<view class="page">
+  <view class="stats-card" wx:if="{{stats}}">
+    <view class="stat-item">
+      <view class="stat-value">{{stats.my_courses_count || 0}}</view>
+      <view class="stat-label">已开通课程</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value">{{stats.completed_chapters_count || 0}}</view>
+      <view class="stat-label">已学完章节</view>
+    </view>
+    <view class="stat-item">
+      <view class="stat-value">{{stats.learning_hours || 0}}</view>
+      <view class="stat-label">学习时长(h)</view>
+    </view>
+  </view>
+
+  <view class="course-list" wx:if="{{courses.length > 0}}">
+    <view class="course-card" wx:for="{{courses}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="course-cover" src="{{item.thumbnail_url}}" mode="aspectFill" wx:if="{{item.thumbnail_url}}"></image>
+      <view class="course-cover course-cover-placeholder" wx:else>
+        <view class="cover-placeholder-text">课</view>
+      </view>
+      <view class="course-info">
+        <view class="course-title ellipsis-2">{{item.title}}</view>
+        <view class="course-progress-row">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.progressPercentage || 0}}%"></view>
+          </view>
+          <view class="progress-text">{{item.progressPercentage || 0}}%</view>
+        </view>
+        <view class="course-chapters">{{item.chapter_count || 0}} 章节</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <view class="empty-state-text">暂无已开通的课程</view>
+  </view>
+
+  <view class="loading-spinner" wx:if="{{loading}}">
+    <view class="spinner"></view>
+  </view>
+</view>

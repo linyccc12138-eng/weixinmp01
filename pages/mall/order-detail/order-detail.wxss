@@ -1,0 +1,32 @@
+.page { padding-bottom: 80px; }
+.status-section { padding: 24px; background: #1A1A1A; }
+.status-label { font-size: 22px; font-weight: 500; color: #FFFFFF; }
+.address-section { padding: 16px 24px; background: #FFFFFF; margin-top: 8px; }
+.address-name { font-size: 14px; font-weight: 500; color: #1A1A1A; }
+.address-detail { font-size: 13px; color: #888; margin-top: 4px; line-height: 1.5; }
+.shipping-section { padding: 16px 24px; background: #FFFFFF; margin-top: 8px; }
+.shipping-title { font-size: 14px; font-weight: 500; color: #1A1A1A; margin-bottom: 8px; }
+.shipping-row { display: flex; align-items: center; padding: 4px 0; gap: 8px; }
+.shipping-label { font-size: 13px; color: #888; min-width: 60px; }
+.shipping-value { font-size: 13px; color: #1A1A1A; flex: 1; }
+.copy-btn { font-size: 12px; color: #888; padding: 2px 8px; border: 1px solid #E5E5E5; border-radius: 100px; }
+.items-section { padding: 16px 24px; background: #FFFFFF; margin-top: 8px; }
+.section-title { font-size: 14px; font-weight: 500; color: #1A1A1A; margin-bottom: 12px; }
+.item-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #F7F7F7; }
+.item-thumb { width: 60px; height: 60px; border-radius: 12px; background: #F7F7F7; flex-shrink: 0; }
+.item-info { flex: 1; min-width: 0; }
+.item-name { font-size: 14px; color: #1A1A1A; }
+.item-spec { font-size: 12px; color: #888; margin-top: 2px; }
+.item-bottom { display: flex; justify-content: space-between; margin-top: 4px; }
+.item-price { font-size: 14px; font-weight: 500; color: #1A1A1A; font-variant-numeric: tabular-nums; }
+.item-qty { font-size: 12px; color: #888; }
+.info-section { padding: 16px 24px; background: #FFFFFF; margin-top: 8px; }
+.info-row { display: flex; align-items: center; padding: 8px 0; gap: 8px; }
+.info-label { font-size: 13px; color: #888; min-width: 60px; }
+.info-value { font-size: 13px; color: #1A1A1A; flex: 1; }
+.info-row.total { border-top: 1px solid #F0F0F0; margin-top: 4px; padding-top: 12px; }
+.info-value.price { font-size: 18px; font-weight: 500; color: #1A1A1A; font-variant-numeric: tabular-nums; }
+.close-section { padding: 16px 24px; background: #FFF0F0; margin-top: 8px; }
+.close-info { font-size: 13px; color: #C0392B; }
+.close-time { font-size: 12px; color: #888; margin-top: 4px; }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; gap: 8px; padding: 8px 24px; background: #FFFFFF; border-top: 1px solid #F0F0F0; z-index: 100; }
