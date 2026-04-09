@@ -21,9 +21,10 @@ Page({
 
   async loadCategories() {
     try {
-      const res = await auth.request({ url: '/mall/api/admin/categories', method: 'GET' })
+      const res = await auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 1 } })
       if (res.success && res.data) {
-        this.setData({ categories: res.data.items || res.data || [] })
+        const filters = res.data.filters || {}
+        this.setData({ categories: filters.categories || [] })
       }
     } catch (e) {}
   },
@@ -37,7 +38,7 @@ Page({
       if (this.data.activeCategory) data.category_id = this.data.activeCategory
       const res = await auth.request({ url: '/mall/api/products', method: 'GET', data })
       let items = []
-      if (res.success && res.data) items = res.data.items || res.data || []
+      if (res.success && res.data) items = res.data.data || res.data.items || res.data || []
       items = items.map(item => ({
         ...item,
         hasOriginalPrice: Number(item.original_price) > 0 && Number(item.original_price) > Number(item.price)

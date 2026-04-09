@@ -56,23 +56,26 @@ Page({
     try {
       const promises = [
         auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 20 } }).catch(() => null),
-        auth.request({ url: '/mall/api/admin/activities', method: 'GET', data: { page: 1, page_size: 5 } }).catch(() => null)
+        auth.request({ url: '/mall/api/activities', method: 'GET' }).catch(() => null)
       ]
       if (auth.isLoggedIn()) {
         promises.push(
           auth.request({ url: '/mall/api/profile', method: 'GET' }).catch(() => null)
         )
       }
-      const [productRes, activityRes, profileRes] = await Promise.all(promises)
+      const results = await Promise.all(promises)
+      const productRes = results[0]
+      const activityRes = results[1]
+      const profileRes = results[2] || null
 
       let rawProducts = []
       if (productRes && productRes.success && productRes.data) {
-        rawProducts = productRes.data.items || productRes.data || []
+        rawProducts = productRes.data.data || productRes.data.items || productRes.data || []
       }
 
       let banners = []
       if (activityRes && activityRes.success && activityRes.data) {
-        banners = activityRes.data.items || activityRes.data || []
+        banners = Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])
       }
 
       let memberInfo = null
@@ -117,7 +120,7 @@ Page({
       })
       let items = []
       if (res && res.success && res.data) {
-        items = res.data.items || res.data || []
+        items = res.data.data || res.data.items || res.data || []
       }
       const processedItems = processProductList(items, this.data.memberDiscount)
       this.setData({

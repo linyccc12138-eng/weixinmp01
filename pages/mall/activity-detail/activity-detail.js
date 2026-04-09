@@ -7,11 +7,10 @@ Page({
   },
   async loadActivity(id) {
     try {
-      const res = await auth.request({ url: `/mall/api/admin/activities`, method: 'GET', data: { page: 1, page_size: 100 } })
+      const res = await auth.request({ url: `/mall/api/activities/${id}`, method: 'GET' })
       let activity = {}
       if (res.success && res.data) {
-        const items = res.data.items || res.data || []
-        activity = items.find(a => String(a.id) === String(id)) || {}
+        activity = res.data
       }
       this.setData({ activity })
       wx.setNavigationBarTitle({ title: activity.title || '活动详情' })

@@ -20,28 +20,36 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.loadData().then(() => wx.stopPullDownRefresh())
+    this.loadData().then(() => wx.stopPullDownRefresh()).catch(() => wx.stopPullDownRefresh())
   },
 
   async loadData() {
     this.setData({ loading: true })
     try {
-      const promises = []
-      if (auth.isLoggedIn()) {
-        promises.push(
-          auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 6 } }).catch(() => ({ success: false })),
-          auth.request({ url: '/mall/api/admin/activities', method: 'GET', data: { page: 1, page_size: 5 } }).catch(() => ({ success: false }))
-        )
-      } else {
-        promises.push(
-          auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 6 } }).catch(() => ({ success: false })),
-          auth.request({ url: '/mall/api/admin/activities', method: 'GET', data: { page: 1, page_size: 5 } }).catch(() => ({ success: false }))
-        )
-      }
+      const promises = [
+        auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 6 } }).catch(() => null),
+        auth.request({ url: '/mall/api/activities', method: 'GET' }).catch(() => null)
+      ]
       const [productRes, activityRes] = await Promise.all(promises)
+
+      let newProducts = []
+      if (productRes && productRes.success && productRes.data) {
+        const data = productRes.data
+        newProducts = data.data || data.items || []
+        newProducts = newProducts.map(item => ({
+          ...item,
+          hasOriginalPrice: Number(item.market_price || item.original_price || 0) > 0 && Number(item.market_price || item.original_price || 0) > Number(item.price)
+        }))
+      }
+
+      let activities = []
+      if (activityRes && activityRes.success && activityRes.data) {
+        activities = Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])
+      }
+
       this.setData({
-        newProducts: (productRes && productRes.success && productRes.data && productRes.data.items) ? productRes.data.items : (productRes && productRes.data) || [],
-        activities: (activityRes && activityRes.success && activityRes.data && activityRes.data.items) ? activityRes.data.items : (activityRes && activityRes.data) || [],
+        newProducts,
+        activities,
         loading: false
       })
     } catch (e) {
