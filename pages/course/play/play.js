@@ -109,21 +109,40 @@ Page({
   async loadPlayData(chapterId) {
     try {
       const res = await auth.courseRequest({
-        url: `/play/${chapterId}`,
+        url: `/play/api/${chapterId}`,
         method: 'GET'
       })
-      const data = res.data || res
+      const data = (res && res.data) || {}
+      const chapter = data.chapter || {}
+      const course = data.course || {}
+      const allChapters = (data.all_chapters || []).map(ch => ({
+        ...ch,
+        is_completed: false
+      }))
+
+      let videoSrc = ''
+      if (chapter.file_id) {
+        try {
+          const psignRes = await auth.courseRequest({
+            url: `/play/${chapterId}/psign`,
+            method: 'GET',
+            header: { 'X-Device-Id': 'miniprogram' }
+          })
+          if (psignRes && psignRes.success && psignRes.file_id) {
+            const appId = '1300598172'
+            videoSrc = `https://playvideo.qcloud.com/getplayinfo/v2/${appId}/${psignRes.file_id}?psign=${psignRes.psign}`
+          }
+        } catch (e) {}
+      }
+
       this.setData({
-        chapter: data.chapter || {},
-        course: data.course || {},
-        allChapters: (data.all_chapters || []).map(ch => ({
-          ...ch,
-          is_completed: data.completed_chapters ? data.completed_chapters.includes(ch.id) : false
-        })),
+        chapter,
+        course,
+        allChapters,
         resumeTime: data.resume_time || 0,
-        videoSrc: data.video_url || ''
+        videoSrc
       })
-      wx.setNavigationBarTitle({ title: data.chapter ? data.chapter.title : '视频播放' })
+      wx.setNavigationBarTitle({ title: chapter.title || '视频播放' })
       this.videoCtx = wx.createVideoContext('courseVideo')
       this.startProgressTimer()
     } catch (e) {

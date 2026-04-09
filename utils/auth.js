@@ -138,9 +138,41 @@ async function phoneLogin(phone, password) {
   })
   if (res && res.success && res.data && res.data.user) {
     setUserInfo(res.data.user)
+    courseLogin(phone, password).catch(() => {})
     return res.data.user
   }
   throw new Error((res && res.message) || '登录失败')
+}
+
+async function courseLogin(phone, password) {
+  try {
+    const header = {
+      'Content-Type': 'application/json',
+      'X-Mini-Program': '1'
+    }
+    const courseSession = getCourseSession()
+    if (courseSession) {
+      header['Cookie'] = `session=${courseSession}`
+    }
+    const res = await new Promise((resolve, reject) => {
+      wx.request({
+        url: config.courseBaseUrl + '/api/login',
+        method: 'POST',
+        data: { phone, password },
+        header,
+        timeout: config.timeout,
+        success(r) {
+          if (r.statusCode >= 200 && r.statusCode < 300) resolve(r.data)
+          else reject(new Error('课程平台登录失败'))
+        },
+        fail: reject
+      })
+    })
+    if (res && res._session_id) {
+      setCourseSession(res._session_id)
+    }
+    return res
+  } catch (e) {}
 }
 
 async function wxLogin() {
@@ -215,7 +247,11 @@ function request(options) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           const data = res.data
           if (data && data._session_id) {
-            setMallSession(data._session_id)
+            if (options._isCourse) {
+              setCourseSession(data._session_id)
+            } else {
+              setMallSession(data._session_id)
+            }
           }
           resolve(data)
         } else {
@@ -240,6 +276,7 @@ function courseRequest(options) {
   }
   options.header = header
   options.baseUrl = config.courseBaseUrl
+  options._isCourse = true
   return request(options)
 }
 
@@ -260,6 +297,7 @@ module.exports = {
   logout,
   wxLogin,
   phoneLogin,
+  courseLogin,
   request,
   courseRequest
 }

@@ -24,7 +24,7 @@ Page({
     this.setData({ loading: true })
     try {
       const [courseRes, chaptersRes] = await Promise.all([
-        auth.courseRequest({ url: `/course/${id}`, method: 'GET' }).catch(() => null),
+        auth.courseRequest({ url: `/course/api/${id}`, method: 'GET' }).catch(() => null),
         auth.courseRequest({ url: `/course/${id}/api/chapters`, method: 'GET' }).catch(() => null)
       ])
       const course = (courseRes && (courseRes.data || courseRes)) || {}

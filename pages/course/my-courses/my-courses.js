@@ -10,7 +10,7 @@ Page({
     this.setData({ loading: true })
     try {
       const [coursesRes, statsRes] = await Promise.all([
-        auth.courseRequest({ url: '/user/my-courses', method: 'GET' }).catch(() => null),
+        auth.courseRequest({ url: '/user/api/my-courses', method: 'GET' }).catch(() => null),
         auth.courseRequest({ url: '/user/api/profile', method: 'GET' }).catch(() => null)
       ])
 
