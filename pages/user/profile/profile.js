@@ -8,6 +8,8 @@ Page({
     userInfo: {},
     memberInfo: null,
     memberDiscount: 1,
+    hasMemberDiscount: false,
+    memberDiscountLabel: '',
     memberBalance: '0.00',
     maskedPhone: '',
     initial: '',
@@ -35,12 +37,16 @@ Page({
         const memberInfo = res.data.member || null
         const memberDiscount = memberInfo ? format.memberDiscountRate(memberInfo) : 1
         const memberBalance = memberInfo ? format.formatMoney(memberInfo.fbalance || 0) : '0.00'
+        const hasMemberDiscount = memberDiscount < 1
+        const memberDiscountLabel = hasMemberDiscount ? (memberDiscount * 10).toFixed(1) : ''
         const maskedPhone = format.maskPhone(userInfo.phone || '')
         const initial = (userInfo.nickname || userInfo.phone || '?')[0].toUpperCase()
         this.setData({
           userInfo,
           memberInfo,
           memberDiscount,
+          hasMemberDiscount,
+          memberDiscountLabel,
           memberBalance,
           maskedPhone,
           initial

@@ -2,7 +2,7 @@ const auth = require('../../../utils/auth')
 const format = require('../../../utils/format')
 
 Page({
-  data: { memberInfo: null, memberBalance: '0.00', memberDiscount: 1, records: [] },
+  data: { memberInfo: null, memberBalance: '0.00', memberDiscount: 1, discountLabel: '无折扣', records: [] },
 
   onLoad() { this.loadWallet() },
 
@@ -13,7 +13,8 @@ Page({
         const memberInfo = res.data.member || null
         const memberDiscount = memberInfo ? format.memberDiscountRate(memberInfo) : 1
         const memberBalance = memberInfo ? format.formatMoney(memberInfo.fbalance || 0) : '0.00'
-        this.setData({ memberInfo, memberDiscount, memberBalance })
+        const discountLabel = memberDiscount < 1 ? (memberDiscount * 10).toFixed(1) + '折' : '无折扣'
+        this.setData({ memberInfo, memberDiscount, memberBalance, discountLabel })
       }
     } catch (e) {}
     try {

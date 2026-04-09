@@ -20,7 +20,7 @@
   <view class="member-card" wx:if="{{memberInfo}}" bindtap="goWallet">
     <view class="member-info">
       <view class="member-level">{{memberInfo.fclassesname || '会员'}}</view>
-      <view class="member-discount" wx:if="{{memberDiscount < 1}}">享{{memberDiscount * 10}}折优惠</view>
+      <view class="member-discount" wx:if="{{hasMemberDiscount}}">享{{memberDiscountLabel}}折优惠</view>
     </view>
     <view class="member-balance">余额 ¥{{memberBalance}}</view>
   </view>
@@ -35,7 +35,7 @@
         <view class="product-name ellipsis">{{item.name}}</view>
         <view class="product-price-row">
           <view class="product-price">¥{{item.price}}</view>
-          <view class="product-original-price" wx:if="{{item.original_price && item.original_price > item.price}}">¥{{item.original_price}}</view>
+          <view class="product-original-price" wx:if="{{item.hasOriginalPrice}}">¥{{item.original_price}}</view>
         </view>
       </view>
     </scroll-view>
@@ -52,10 +52,10 @@
           <view class="product-card-name ellipsis-2">{{item.name}}</view>
           <view class="product-card-price-row">
             <view class="product-card-price">¥{{item.price}}</view>
-            <view class="product-card-original" wx:if="{{item.original_price && item.original_price > item.price}}">¥{{item.original_price}}</view>
+            <view class="product-card-original" wx:if="{{item.hasOriginalPrice}}">¥{{item.original_price}}</view>
           </view>
-          <view class="product-card-member" wx:if="{{item.supports_member_discount && memberDiscount < 1}}">
-            会员¥{{(item.price * memberDiscount).toFixed(2)}}
+          <view class="product-card-member" wx:if="{{item.showMemberPrice}}">
+            会员¥{{item.memberPrice}}
           </view>
         </view>
       </view>

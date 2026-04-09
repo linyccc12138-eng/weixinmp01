@@ -38,6 +38,10 @@ Page({
       const res = await auth.request({ url: '/mall/api/products', method: 'GET', data })
       let items = []
       if (res.success && res.data) items = res.data.items || res.data || []
+      items = items.map(item => ({
+        ...item,
+        hasOriginalPrice: Number(item.original_price) > 0 && Number(item.original_price) > Number(item.price)
+      }))
       this.setData({
         products: refresh ? items : [...this.data.products, ...items],
         hasMore: items.length >= 20,

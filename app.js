@@ -15,37 +15,41 @@ App({
 
   getSystemInfo() {
     try {
-      const info = wx.getSystemInfoSync()
-      this.globalData.systemInfo = info
+      const deviceInfo = wx.getDeviceInfo()
+      const windowInfo = wx.getWindowInfo()
+      const appBaseInfo = wx.getAppBaseInfo()
+      this.globalData.systemInfo = {
+        ...deviceInfo,
+        ...windowInfo,
+        ...appBaseInfo,
+        platform: deviceInfo.platform || 'unknown'
+      }
     } catch (e) {}
   },
 
   checkUpdate() {
-    if (wx.canIUse('getUpdateManager')) {
+    try {
+      if (!wx.getUpdateManager) return
       const updateManager = wx.getUpdateManager()
-      updateManager.onCheckUpdate(res => {
-        if (res.hasUpdate) {
-          updateManager.onUpdateReady(() => {
-            wx.showModal({
-              title: '更新提示',
-              content: '新版本已经准备好，是否重启应用？',
-              success: modalRes => {
-                if (modalRes.confirm) {
-                  updateManager.applyUpdate()
-                }
-              }
-            })
-          })
-          updateManager.onUpdateFailed(() => {
-            wx.showModal({
-              title: '更新提示',
-              content: '新版本下载失败，请检查网络后重试',
-              showCancel: false
-            })
-          })
-        }
+      updateManager.onUpdateReady(() => {
+        wx.showModal({
+          title: '更新提示',
+          content: '新版本已经准备好，是否重启应用？',
+          success: modalRes => {
+            if (modalRes.confirm) {
+              updateManager.applyUpdate()
+            }
+          }
+        })
       })
-    }
+      updateManager.onUpdateFailed(() => {
+        wx.showModal({
+          title: '更新提示',
+          content: '新版本下载失败，请检查网络后重试',
+          showCancel: false
+        })
+      })
+    } catch (e) {}
   },
 
   trySilentLogin() {

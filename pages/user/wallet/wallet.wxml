@@ -10,7 +10,7 @@
     </view>
     <view class="info-row">
       <view class="info-label">会员折扣</view>
-      <view class="info-value">{{memberDiscount < 1 ? memberDiscount * 10 + '折' : '无折扣'}}</view>
+      <view class="info-value">{{discountLabel}}</view>
     </view>
   </view>
   <view class="records-section">

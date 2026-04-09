@@ -29,7 +29,7 @@
       <view class="summary-label">商品总价</view>
       <view class="summary-value">¥{{summary.subtotal}}</view>
     </view>
-    <view class="summary-row" wx:if="{{summary.discount > 0}}">
+    <view class="summary-row" wx:if="{{hasDiscount}}">
       <view class="summary-label">优惠金额</view>
       <view class="summary-value discount">-¥{{summary.discount}}</view>
     </view>

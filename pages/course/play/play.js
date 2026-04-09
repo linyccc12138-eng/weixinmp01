@@ -50,8 +50,8 @@ Page({
 
   setupScreenProtection() {
     try {
-      const sysInfo = wx.getSystemInfoSync()
-      if (sysInfo.platform === 'android') {
+      const deviceInfo = wx.getDeviceInfo()
+      if (deviceInfo.platform === 'android') {
         wx.setVisualEffectOnCapture({ visualEffect: 'hidden' })
       } else {
         wx.onUserCaptureScreen(() => {
@@ -87,8 +87,8 @@ Page({
 
   removeScreenProtection() {
     try {
-      const sysInfo = wx.getSystemInfoSync()
-      if (sysInfo.platform === 'android') {
+      const deviceInfo = wx.getDeviceInfo()
+      if (deviceInfo.platform === 'android') {
         wx.setVisualEffectOnCapture({ visualEffect: 'none' })
       } else {
         wx.offUserCaptureScreen()

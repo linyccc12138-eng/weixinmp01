@@ -52,6 +52,7 @@ Page({
       const memberInfo = app.globalData.userInfo
       const memberDiscount = memberInfo ? format.memberDiscountRate(memberInfo) : 1
       const showMemberPrice = format.hasMemberDiscount(memberInfo, product.supports_member_discount)
+      const showOriginalPrice = Number(product.price) > 0 && Number(product.original_price) > Number(product.price)
 
       this.setData({
         product,
@@ -60,7 +61,8 @@ Page({
         hasSku,
         currentPrice: format.formatMoney(product.price),
         currentStock: product.stock || 0,
-        showMemberPrice: showMemberPrice && memberDiscount < 1
+        showMemberPrice: showMemberPrice && memberDiscount < 1,
+        showOriginalPrice
       })
       wx.setNavigationBarTitle({ title: product.name || '商品详情' })
     } catch (e) {

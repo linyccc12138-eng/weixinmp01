@@ -1,6 +1,22 @@
 const auth = require('../../../utils/auth')
 const format = require('../../../utils/format')
 
+function processProductList(products, memberDiscount) {
+  return (products || []).map(item => {
+    const price = Number(item.price) || 0
+    const originalPrice = Number(item.original_price) || 0
+    const hasOriginalPrice = originalPrice > 0 && originalPrice > price
+    const showMemberPrice = !!(item.supports_member_discount && memberDiscount < 1)
+    const memberPrice = showMemberPrice ? format.formatMoney(price * memberDiscount) : ''
+    return {
+      ...item,
+      hasOriginalPrice,
+      showMemberPrice,
+      memberPrice
+    }
+  })
+}
+
 Page({
   data: {
     banners: [],
@@ -9,6 +25,8 @@ Page({
     newProducts: [],
     memberInfo: null,
     memberDiscount: 1,
+    memberDiscountLabel: '',
+    hasMemberDiscount: false,
     memberBalance: '0.00',
     loading: true,
     page: 1,
@@ -23,7 +41,7 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.loadData(true).then(() => wx.stopPullDownRefresh())
+    this.loadData(true).then(() => wx.stopPullDownRefresh()).catch(() => wx.stopPullDownRefresh())
   },
 
   onReachBottom() {
@@ -47,9 +65,9 @@ Page({
       }
       const [productRes, activityRes, profileRes] = await Promise.all(promises)
 
-      let products = []
+      let rawProducts = []
       if (productRes && productRes.success && productRes.data) {
-        products = productRes.data.items || productRes.data || []
+        rawProducts = productRes.data.items || productRes.data || []
       }
 
       let banners = []
@@ -68,14 +86,20 @@ Page({
         }
       }
 
+      const hasMemberDiscount = memberDiscount < 1
+      const memberDiscountLabel = hasMemberDiscount ? (memberDiscount * 10).toFixed(1) : ''
+      const products = processProductList(rawProducts, memberDiscount)
+
       this.setData({
         products,
         banners,
         memberInfo,
         memberDiscount,
+        memberDiscountLabel,
+        hasMemberDiscount,
         memberBalance,
         loading: false,
-        hasMore: products.length >= 20
+        hasMore: rawProducts.length >= 20
       })
     } catch (e) {
       this.setData({ loading: false })
@@ -95,8 +119,9 @@ Page({
       if (res && res.success && res.data) {
         items = res.data.items || res.data || []
       }
+      const processedItems = processProductList(items, this.data.memberDiscount)
       this.setData({
-        products: [...this.data.products, ...items],
+        products: [...this.data.products, ...processedItems],
         page,
         hasMore: items.length >= 20,
         loading: false

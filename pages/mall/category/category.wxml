@@ -19,7 +19,7 @@
         <view class="product-name ellipsis-2">{{item.name}}</view>
         <view class="product-price-row">
           <view class="product-price">¥{{item.price}}</view>
-          <view class="product-original" wx:if="{{item.original_price > item.price}}">¥{{item.original_price}}</view>
+          <view class="product-original" wx:if="{{item.hasOriginalPrice}}">¥{{item.original_price}}</view>
         </view>
       </view>
     </view>

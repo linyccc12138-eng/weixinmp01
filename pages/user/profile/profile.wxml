@@ -10,7 +10,7 @@
 
   <view class="member-card" wx:if="{{memberInfo}}" bindtap="goWallet">
     <view class="member-level">{{memberInfo.fclassesname || '会员'}}</view>
-    <view class="member-discount" wx:if="{{memberDiscount < 1}}">{{memberDiscount * 10}}折优惠</view>
+    <view class="member-discount" wx:if="{{hasMemberDiscount}}">{{memberDiscountLabel}}折优惠</view>
     <view class="member-balance">余额 ¥{{memberBalance}}</view>
   </view>
 

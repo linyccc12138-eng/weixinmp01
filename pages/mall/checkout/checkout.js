@@ -11,6 +11,7 @@ Page({
     memberBalance: '0.00',
     paymentMethod: 'wechat',
     summary: { subtotal: '0.00', discount: '0.00', payable: '0.00' },
+    hasDiscount: false,
     submitting: false,
     selectedItemIds: [],
     productId: 0,
@@ -101,6 +102,7 @@ Page({
         memberInfo,
         memberBalance,
         checkoutItems,
+        hasDiscount: discount > 0,
         summary: {
           subtotal: format.formatMoney(subtotal),
           discount: format.formatMoney(discount),

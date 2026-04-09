@@ -11,7 +11,7 @@
     <view class="product-summary" wx:if="{{product.summary}}">{{product.summary}}</view>
     <view class="price-row">
       <view class="current-price">¥{{currentPrice}}</view>
-      <view class="original-price" wx:if="{{product.price && product.price > currentPrice}}">¥{{product.price}}</view>
+      <view class="original-price" wx:if="{{showOriginalPrice}}">¥{{product.price}}</view>
       <view class="member-badge" wx:if="{{showMemberPrice}}">会员价</view>
     </view>
     <view class="stock-info">库存 {{currentStock}}</view>
