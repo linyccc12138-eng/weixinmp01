@@ -32,9 +32,8 @@ Page({
           allow_existing: true
         }
       })
-      if (res.success && res.data && (res.data.token || res.data.session_id)) {
-        auth.setToken(res.data.token || res.data.session_id)
-        auth.setUserInfo(res.data.user || res.data)
+      if (res.success && res.data) {
+        if (res.data.user) auth.setUserInfo(res.data.user)
         const app = getApp()
         app.setUserInfo(res.data.user || res.data)
         app.fetchCartCount()
@@ -66,9 +65,8 @@ Page({
         method: 'POST',
         data: { phone, password, role: 'customer', allow_existing: false }
       })
-      if (res.success && res.data && (res.data.token || res.data.session_id)) {
-        auth.setToken(res.data.token || res.data.session_id)
-        auth.setUserInfo(res.data.user || res.data)
+      if (res.success && res.data) {
+        if (res.data.user) auth.setUserInfo(res.data.user)
         const app = getApp()
         app.setUserInfo(res.data.user || res.data)
         app.fetchCartCount()

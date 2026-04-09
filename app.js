@@ -11,7 +11,7 @@ App({
     this.getSystemInfo()
     this.checkUpdate()
     this.trySilentLogin()
-    auth.fetchCsrfToken()
+    auth.fetchSession()
   },
 
   getSystemInfo() {
@@ -54,8 +54,7 @@ App({
   },
 
   trySilentLogin() {
-    const token = auth.getToken()
-    if (token) {
+    if (auth.isLoggedIn()) {
       const userInfo = auth.getUserInfo()
       if (userInfo) {
         this.globalData.userInfo = userInfo

@@ -1,38 +1,14 @@
 const config = require('./config')
 
-const TOKEN_KEY = config.tokenKey
+const USER_INFO_KEY = config.userInfoKey
 const COURSE_SESSION_KEY = 'course_session'
 const CSRF_KEY = 'csrf_token'
 const MALL_SESSION_KEY = 'mall_session'
 let isRedirecting401 = false
 
-function getToken() {
-  return wx.getStorageSync(TOKEN_KEY) || ''
-}
-
-function setToken(token) {
-  wx.setStorageSync(TOKEN_KEY, token)
-}
-
-function removeToken() {
-  wx.removeStorageSync(TOKEN_KEY)
-}
-
-function getCourseSession() {
-  return wx.getStorageSync(COURSE_SESSION_KEY) || ''
-}
-
-function setCourseSession(sessionId) {
-  wx.setStorageSync(COURSE_SESSION_KEY, sessionId)
-}
-
-function removeCourseSession() {
-  wx.removeStorageSync(COURSE_SESSION_KEY)
-}
-
 function getUserInfo() {
   try {
-    const info = wx.getStorageSync(config.userInfoKey)
+    const info = wx.getStorageSync(USER_INFO_KEY)
     return info ? JSON.parse(info) : null
   } catch (e) {
     return null
@@ -40,11 +16,11 @@ function getUserInfo() {
 }
 
 function setUserInfo(info) {
-  wx.setStorageSync(config.userInfoKey, JSON.stringify(info))
+  wx.setStorageSync(USER_INFO_KEY, JSON.stringify(info))
 }
 
 function removeUserInfo() {
-  wx.removeStorageSync(config.userInfoKey)
+  wx.removeStorageSync(USER_INFO_KEY)
 }
 
 function getCsrfToken() {
@@ -63,37 +39,24 @@ function setMallSession(sessionId) {
   wx.setStorageSync(MALL_SESSION_KEY, sessionId)
 }
 
-async function fetchCsrfToken() {
-  try {
-    const res = await new Promise((resolve, reject) => {
-      wx.request({
-        url: config.baseUrl + '/mall/api/session',
-        method: 'GET',
-        success(r) {
-          if (r.statusCode >= 200 && r.statusCode < 300) {
-            const setCookie = r.header && (r.header['Set-Cookie'] || r.header['set-cookie'] || '')
-            resolve({ data: r.data, setCookie })
-          } else {
-            reject(new Error('获取session失败'))
-          }
-        },
-        fail: reject
-      })
-    })
-    if (res.data && res.data.success && res.data.data) {
-      setCsrfToken(res.data.data.csrf_token || '')
-    }
-    if (res.setCookie) {
-      const match = res.setCookie.match(/magic_mall=([^;]+)/)
-      if (match) {
-        setMallSession(match[1])
-      }
-    }
-  } catch (e) {}
+function removeMallSession() {
+  wx.removeStorageSync(MALL_SESSION_KEY)
+}
+
+function getCourseSession() {
+  return wx.getStorageSync(COURSE_SESSION_KEY) || ''
+}
+
+function setCourseSession(sessionId) {
+  wx.setStorageSync(COURSE_SESSION_KEY, sessionId)
+}
+
+function removeCourseSession() {
+  wx.removeStorageSync(COURSE_SESSION_KEY)
 }
 
 function isLoggedIn() {
-  return !!getToken()
+  return !!(getUserInfo() && getMallSession())
 }
 
 function checkLogin() {
@@ -105,10 +68,78 @@ function checkLogin() {
 }
 
 function logout() {
-  removeToken()
+  removeMallSession()
   removeCourseSession()
   removeUserInfo()
+  removeCsrfToken()
   wx.reLaunch({ url: '/pages/index/index' })
+}
+
+function removeCsrfToken() {
+  wx.removeStorageSync(CSRF_KEY)
+}
+
+async function fetchSession() {
+  try {
+    const res = await new Promise((resolve, reject) => {
+      wx.request({
+        url: config.baseUrl + '/mall/api/session',
+        method: 'GET',
+        header: buildCookieHeader(),
+        success(r) {
+          if (r.statusCode >= 200 && r.statusCode < 300) {
+            const setCookie = r.header && (r.header['Set-Cookie'] || r.header['set-cookie'] || '')
+            resolve({ data: r.data, setCookie })
+          } else {
+            reject(new Error('获取session失败'))
+          }
+        },
+        fail: reject
+      })
+    })
+    extractSessionCookie(res.setCookie)
+    if (res.data && res.data.success && res.data.data) {
+      setCsrfToken(res.data.data.csrf_token || '')
+      if (res.data.data.user) {
+        setUserInfo(res.data.data.user)
+      }
+    }
+  } catch (e) {}
+}
+
+function extractSessionCookie(setCookie) {
+  if (!setCookie) return
+  const match = setCookie.match(/magic_mall=([^;]+)/)
+  if (match && match[1]) {
+    setMallSession(match[1])
+  }
+}
+
+function buildCookieHeader() {
+  const parts = []
+  const mallSession = getMallSession()
+  if (mallSession) {
+    parts.push(`magic_mall=${mallSession}`)
+  }
+  const courseSession = getCourseSession()
+  if (courseSession) {
+    parts.push(`session=${courseSession}`)
+  }
+  return parts.length > 0 ? parts.join('; ') : ''
+}
+
+async function phoneLogin(phone, password) {
+  await fetchSession()
+  const res = await request({
+    url: '/mall/api/auth/login',
+    method: 'POST',
+    data: { phone, password, _csrf_token: getCsrfToken() }
+  })
+  if (res.success && res.data && res.data.user) {
+    setUserInfo(res.data.user)
+    return res.data.user
+  }
+  throw new Error((res.data && res.data.message) || res.message || '登录失败')
 }
 
 async function wxLogin() {
@@ -117,20 +148,18 @@ async function wxLogin() {
     if (!loginRes.code) {
       throw new Error('微信登录失败')
     }
-    await fetchCsrfToken()
+    await fetchSession()
     const res = await request({
       url: '/mall/api/auth/wechat-login',
       method: 'POST',
       data: { code: loginRes.code, _csrf_token: getCsrfToken() }
     })
-    if (res.success) {
-      const data = res.data
-      if (data.token || data.session_id) {
-        setToken(data.token || data.session_id)
-        setUserInfo(data.user)
-        return { needBindPhone: false, user: data.user }
+    if (res.success && res.data) {
+      if (res.data.user) {
+        setUserInfo(res.data.user)
+        return { needBindPhone: false, user: res.data.user }
       }
-      return { needBindPhone: true, openid: data.openid }
+      return { needBindPhone: true, openid: res.data.openid }
     }
     throw new Error(res.message || '登录失败')
   } catch (e) {
@@ -138,36 +167,16 @@ async function wxLogin() {
   }
 }
 
-async function phoneLogin(phone, password) {
-  await fetchCsrfToken()
-  const res = await request({
-    url: '/mall/api/auth/login',
-    method: 'POST',
-    data: { phone, password, _csrf_token: getCsrfToken() }
-  })
-  if (res.success) {
-    const data = res.data
-    setToken(data.token || data.session_id)
-    setUserInfo(data.user)
-    return data.user
-  }
-  throw new Error(res.message || '登录失败')
-}
-
 function request(options) {
   return new Promise((resolve, reject) => {
-    const token = getToken()
     const header = {
       'Content-Type': 'application/json',
       'X-Mini-Program': '1',
       ...options.header
     }
-    if (token) {
-      header['Authorization'] = `Bearer ${token}`
-    }
-    const mallSession = getMallSession()
-    if (mallSession) {
-      header['Cookie'] = (header['Cookie'] ? header['Cookie'] + '; ' : '') + `magic_mall=${mallSession}`
+    const cookieStr = buildCookieHeader()
+    if (cookieStr) {
+      header['Cookie'] = cookieStr
     }
     const method = (options.method || 'GET').toUpperCase()
     if (method !== 'GET') {
@@ -188,7 +197,7 @@ function request(options) {
       timeout: options.timeout || config.timeout,
       success(res) {
         if (res.statusCode === 401) {
-          removeToken()
+          removeMallSession()
           removeCourseSession()
           removeUserInfo()
           if (!isRedirecting401) {
@@ -201,13 +210,7 @@ function request(options) {
           reject(new Error('登录已过期，请重新登录'))
           return
         }
-        const setCookie = res.header && (res.header['Set-Cookie'] || res.header['set-cookie'] || '')
-        if (setCookie) {
-          const match = setCookie.match(/magic_mall=([^;]+)/)
-          if (match) {
-            setMallSession(match[1])
-          }
-        }
+        extractSessionCookie(res.header && (res.header['Set-Cookie'] || res.header['set-cookie'] || ''))
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data)
         } else {
@@ -223,16 +226,12 @@ function request(options) {
 }
 
 function courseRequest(options) {
-  const sessionId = getCourseSession()
-  const token = getToken()
   const header = {
     ...options.header
   }
-  if (sessionId) {
-    header['Cookie'] = `session=${sessionId}`
-  }
-  if (token) {
-    header['Authorization'] = `Bearer ${token}`
+  const courseSession = getCourseSession()
+  if (courseSession) {
+    header['Cookie'] = `session=${courseSession}`
   }
   options.header = header
   options.baseUrl = config.courseBaseUrl
@@ -240,20 +239,17 @@ function courseRequest(options) {
 }
 
 module.exports = {
-  getToken,
-  setToken,
-  removeToken,
-  getCourseSession,
-  setCourseSession,
-  removeCourseSession,
   getUserInfo,
   setUserInfo,
   removeUserInfo,
-  getCsrfToken,
-  setCsrfToken,
+  getCourseSession,
+  setCourseSession,
+  removeCourseSession,
   getMallSession,
   setMallSession,
-  fetchCsrfToken,
+  getCsrfToken,
+  setCsrfToken,
+  fetchSession,
   isLoggedIn,
   checkLogin,
   logout,
