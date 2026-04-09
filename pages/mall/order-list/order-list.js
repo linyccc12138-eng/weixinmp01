@@ -28,7 +28,15 @@ Page({
       })
       let items = []
       if (res.success && res.data) items = res.data.items || res.data || []
-      items = items.map(o => ({ ...o, statusLabel: format.orderStatusLabel(o) }))
+      items = items.map(o => {
+        if (o.items) {
+          o.items = o.items.map(item => ({
+            ...item,
+            cover_image: format.formatImageUrl(item.cover_image)
+          }))
+        }
+        return { ...o, statusLabel: format.orderStatusLabel(o) }
+      })
       this.setData({
         orders: refresh ? items : [...this.data.orders, ...items],
         hasMore: items.length >= 15,

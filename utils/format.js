@@ -1,3 +1,12 @@
+const config = require('./config')
+
+function formatImageUrl(url) {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url
+  if (url.startsWith('wxfile://') || url.startsWith('/wx')) return url
+  return config.baseUrl + url
+}
+
 function formatMoney(value) {
   return Number(value || 0).toFixed(2)
 }
@@ -119,6 +128,7 @@ function timeAgo(dateStr) {
 }
 
 module.exports = {
+  formatImageUrl,
   formatMoney,
   formatDate,
   formatDuration,

@@ -21,6 +21,12 @@ Page({
     try {
       const res = await auth.request({ url: `/mall/api/orders/${this.data.orderId}`, method: 'GET' })
       const order = res.data || res
+      if (order.items) {
+        order.items = order.items.map(item => ({
+          ...item,
+          cover_image: format.formatImageUrl(item.cover_image)
+        }))
+      }
       this.setData({
         order: { ...order, statusLabel: format.orderStatusLabel(order) },
         addressText: format.receiverAddress(order),

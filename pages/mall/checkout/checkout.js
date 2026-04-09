@@ -69,7 +69,7 @@ Page({
           checkoutItems = [{
             product_id: product.id,
             product_name: product.name,
-            cover_image: product.cover_image,
+            cover_image: format.formatImageUrl(product.cover_image),
             final_price: format.formatMoney(unitPrice),
             unit_price: product.price,
             quantity: this.data.quantity,
@@ -87,9 +87,9 @@ Page({
             if (format.hasMemberDiscount(memberInfo, item.supports_member_discount) && memberDiscount < 1) {
               const memberPrice = originalPrice * memberDiscount
               discount += (originalPrice - memberPrice) * (item.quantity || 1)
-              return { ...item, final_price: format.formatMoney(memberPrice) }
+              return { ...item, cover_image: format.formatImageUrl(item.cover_image), final_price: format.formatMoney(memberPrice) }
             }
-            return item
+            return { ...item, cover_image: format.formatImageUrl(item.cover_image) }
           })
           subtotal = checkoutItems.reduce((sum, item) => sum + Number(item.unit_price || item.final_price || 0) * (item.quantity || 1), 0)
         }

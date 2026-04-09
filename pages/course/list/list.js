@@ -52,6 +52,7 @@ Page({
       }
       const newCourses = courses.map(c => ({
         ...c,
+        thumbnail_url: format.formatImageUrl(c.thumbnail_url),
         has_permission: c.has_permission || false,
         chapter_count: c.chapter_count || (c.chapters ? c.chapters.length : 0),
         progressColor: format.getProgressColor(c.progress ? c.progress.percentage : 0)

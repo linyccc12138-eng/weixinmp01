@@ -40,6 +40,8 @@ Page({
       if (galleryImages.length === 0 && product.cover_image) {
         galleryImages = [product.cover_image]
       }
+      galleryImages = galleryImages.map(url => format.formatImageUrl(url))
+      product.cover_image = format.formatImageUrl(product.cover_image)
 
       const skuOptionsList = []
       const skuOptions = product.sku_options || product.options || {}
@@ -188,7 +190,7 @@ Page({
     return {
       title: this.data.product.name,
       path: `/pages/mall/product-detail/product-detail?id=${this.data.productId}`,
-      imageUrl: this.data.product.cover_image || ''
+      imageUrl: format.formatImageUrl(this.data.product.cover_image) || ''
     }
   }
 })

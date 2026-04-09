@@ -28,6 +28,7 @@ Page({
         auth.courseRequest({ url: `/course/${id}/api/chapters`, method: 'GET' }).catch(() => null)
       ])
       const course = (courseRes && (courseRes.data || courseRes)) || {}
+      course.thumbnail_url = format.formatImageUrl(course.thumbnail_url)
       const chaptersData = (chaptersRes && (chaptersRes.data || chaptersRes)) || []
       const chapters = (course.chapters || chaptersData.chapters || chaptersData || []).map((ch, idx) => ({
         ...ch,

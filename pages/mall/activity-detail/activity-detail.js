@@ -1,4 +1,5 @@
 const auth = require('../../../utils/auth')
+const format = require('../../../utils/format')
 
 Page({
   data: { activity: {} },
@@ -10,7 +11,10 @@ Page({
       const res = await auth.request({ url: `/mall/api/activities/${id}`, method: 'GET' })
       let activity = {}
       if (res.success && res.data) {
-        activity = res.data
+        activity = {
+          ...res.data,
+          thumbnail_image: format.formatImageUrl(res.data.thumbnail_image)
+        }
       }
       this.setData({ activity })
       wx.setNavigationBarTitle({ title: activity.title || '活动详情' })

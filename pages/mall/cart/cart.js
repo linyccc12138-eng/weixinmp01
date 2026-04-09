@@ -27,6 +27,7 @@ Page({
       if (res.success && res.data) {
         const items = (res.data.items || []).map(item => ({
           ...item,
+          cover_image: format.formatImageUrl(item.cover_image),
           selected: this.data.selectedIds.includes(item.id)
         }))
         this.setData({ items, loading: false })

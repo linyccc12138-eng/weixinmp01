@@ -10,6 +10,7 @@ function processProductList(products, memberDiscount) {
     const memberPrice = showMemberPrice ? format.formatMoney(price * memberDiscount) : ''
     return {
       ...item,
+      cover_image: format.formatImageUrl(item.cover_image),
       hasOriginalPrice,
       showMemberPrice,
       memberPrice
@@ -75,7 +76,11 @@ Page({
 
       let banners = []
       if (activityRes && activityRes.success && activityRes.data) {
-        banners = Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])
+        banners = (Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])).map(b => ({
+          ...b,
+          thumbnail_image: format.formatImageUrl(b.thumbnail_image),
+          image: format.formatImageUrl(b.image || b.thumbnail_image)
+        }))
       }
 
       let memberInfo = null

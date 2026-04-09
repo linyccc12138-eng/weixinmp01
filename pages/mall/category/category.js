@@ -1,4 +1,5 @@
 const auth = require('../../../utils/auth')
+const format = require('../../../utils/format')
 
 Page({
   data: {
@@ -24,7 +25,15 @@ Page({
       const res = await auth.request({ url: '/mall/api/products', method: 'GET', data: { page: 1, page_size: 1 } })
       if (res.success && res.data) {
         const filters = res.data.filters || {}
-        this.setData({ categories: filters.categories || [] })
+        const categories = (filters.categories || []).map(c => ({
+          ...c,
+          icon_image: format.formatImageUrl(c.icon_image),
+          children: (c.children || []).map(ch => ({
+            ...ch,
+            icon_image: format.formatImageUrl(ch.icon_image)
+          }))
+        }))
+        this.setData({ categories })
       }
     } catch (e) {}
   },
@@ -41,6 +50,7 @@ Page({
       if (res.success && res.data) items = res.data.data || res.data.items || res.data || []
       items = items.map(item => ({
         ...item,
+        cover_image: format.formatImageUrl(item.cover_image),
         hasOriginalPrice: Number(item.original_price) > 0 && Number(item.original_price) > Number(item.price)
       }))
       this.setData({

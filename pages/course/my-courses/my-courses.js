@@ -18,6 +18,7 @@ Page({
       if (coursesRes && coursesRes.success && coursesRes.data) {
         courses = (coursesRes.data.courses || coursesRes.data || []).map(c => ({
           ...c,
+          thumbnail_url: format.formatImageUrl(c.thumbnail_url),
           progressPercentage: c.progress ? Math.round(c.progress.percentage || 0) : 0,
           chapter_count: c.chapter_count || (c.chapters ? c.chapters.length : 0)
         }))

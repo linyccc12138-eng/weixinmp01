@@ -38,13 +38,17 @@ Page({
         newProducts = data.data || data.items || []
         newProducts = newProducts.map(item => ({
           ...item,
+          cover_image: format.formatImageUrl(item.cover_image),
           hasOriginalPrice: Number(item.market_price || item.original_price || 0) > 0 && Number(item.market_price || item.original_price || 0) > Number(item.price)
         }))
       }
 
       let activities = []
       if (activityRes && activityRes.success && activityRes.data) {
-        activities = Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])
+        activities = (Array.isArray(activityRes.data) ? activityRes.data : (activityRes.data.items || [])).map(a => ({
+          ...a,
+          thumbnail_image: format.formatImageUrl(a.thumbnail_image)
+        }))
       }
 
       this.setData({
