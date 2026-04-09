@@ -81,27 +81,28 @@ function removeCsrfToken() {
 
 async function fetchSession() {
   try {
+    const header = { 'X-Mini-Program': '1' }
+    const cookieStr = buildCookieHeader()
+    if (cookieStr) header['Cookie'] = cookieStr
     const res = await new Promise((resolve, reject) => {
       wx.request({
         url: config.baseUrl + '/mall/api/session',
         method: 'GET',
-        header: buildCookieHeader(),
+        header,
         success(r) {
-          if (r.statusCode >= 200 && r.statusCode < 300) {
-            const setCookie = r.header && (r.header['Set-Cookie'] || r.header['set-cookie'] || '')
-            resolve({ data: r.data, setCookie })
-          } else {
-            reject(new Error('获取session失败'))
-          }
+          if (r.statusCode >= 200 && r.statusCode < 300) resolve(r.data)
+          else reject(new Error('获取session失败'))
         },
         fail: reject
       })
     })
-    extractSessionCookie(res.setCookie)
-    if (res.data && res.data.success && res.data.data) {
-      setCsrfToken(res.data.data.csrf_token || '')
-      if (res.data.data.user) {
-        setUserInfo(res.data.data.user)
+    if (res && res._session_id) {
+      setMallSession(res._session_id)
+    }
+    if (res && res.success && res.data) {
+      setCsrfToken(res.data.csrf_token || '')
+      if (res.data.user) {
+        setUserInfo(res.data.user)
       }
     }
   } catch (e) {}
@@ -135,11 +136,11 @@ async function phoneLogin(phone, password) {
     method: 'POST',
     data: { phone, password, _csrf_token: getCsrfToken() }
   })
-  if (res.success && res.data && res.data.user) {
+  if (res && res.success && res.data && res.data.user) {
     setUserInfo(res.data.user)
     return res.data.user
   }
-  throw new Error((res.data && res.data.message) || res.message || '登录失败')
+  throw new Error((res && res.message) || '登录失败')
 }
 
 async function wxLogin() {
@@ -212,7 +213,11 @@ function request(options) {
         }
         extractSessionCookie(res.header && (res.header['Set-Cookie'] || res.header['set-cookie'] || ''))
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(res.data)
+          const data = res.data
+          if (data && data._session_id) {
+            setMallSession(data._session_id)
+          }
+          resolve(data)
         } else {
           const msg = (res.data && res.data.message) || '请求失败'
           reject(new Error(msg))
