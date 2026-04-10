@@ -171,7 +171,12 @@ Page({
         data: {
           current_time: this.data.currentTime,
           duration: this.data.duration,
-          progress: this.data.duration > 0 ? Math.min(100, (this.data.currentTime / this.data.duration * 100)) : 0
+          progress: this.data.duration > 0 ? Math.min(100, (this.data.currentTime / this.data.duration * 100)) : 0,
+          event_type: 'heartbeat'
+        },
+        header: {
+          'X-Device-Id': 'miniprogram',
+          'X-Playback-Token': 'mp-' + this.data.chapterId
         }
       })
     } catch (e) {}
